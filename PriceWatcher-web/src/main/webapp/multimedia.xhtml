@@ -1,0 +1,356 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./moduleSecurite.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="content">
+        <style id="tableStyle">
+            .ui-tabs.ui-tabs-top .ui-tabs-nav li.ui-tabs-selected{
+                background-color: cornflowerblue;
+            }
+            .ui-tabs .ui-tabs-nav li{
+                background-color: cornflowerblue;
+            }
+            .ui-columntoggler{
+                width: 150px;
+                height: 210px !important;
+            }
+        </style>
+        <h:form id="dForm">
+
+            <div jsf:id="btn_rch" style="padding-bottom: 2px; text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <h:panelGrid style="margin: auto;">
+                        <p:outputLabel style="" value="#{lv.Filtre}" />
+                        <p:selectOneMenu style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{multimediaMB.selectedCritere.attribut}">
+                            <f:selectItems value="#{multimediaMB.listCritereFiltre}" var="critere" itemLabel="#{critere.libelle}" itemValue="#{critere.attribut}" />
+                            <p:ajax event="change" listener="#{multimediaMB.selectCritere()}" update="btn_rch" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{multimediaMB.selectedCritere.type.equals('String') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:inputText value="#{multimediaMB.selectedCritere.valString}" size="25" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{multimediaMB.selectedCritere.type.equals('Boolean') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectBooleanCheckbox value="#{multimediaMB.selectedCritere.valBool}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{multimediaMB.selectedCritere.type.equals('Select') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectOneMenu style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{multimediaMB.selectedCritere.valSelect}">
+                                <f:selectItems value="#{multimediaMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{multimediaMB.selectedCritere.type.equals('Select1') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectOneMenu disabled="#{!multimediaMB.selectedCritere.type.equals('Select1')}" style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{multimediaMB.selectedCritere.valString}">
+                                <f:selectItem itemLabel="#{lv.Image}" itemValue="Image / Image" />
+                                <f:selectItem itemLabel="#{lv.Audio}" itemValue="Audio / Audio" />
+                                <f:selectItem itemLabel="#{lv.Video}" itemValue="Vidéo / Video" />
+                                <f:selectItem itemLabel="#{lv.Document}" itemValue="Document / Document" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{multimediaMB.selectedCritere.type.equals('Select2') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectOneMenu disabled="#{!multimediaMB.selectedCritere.type.equals('Select2')}" style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{multimediaMB.selectedCritere.valString}">
+                                <f:selectItem itemLabel="#{lv.Galerie}" itemValue="Galerie / Gallery" />
+                                <f:selectItem itemLabel="#{lv.Publicite}" itemValue="Publicité / Advertising" />
+                                <f:selectItem itemLabel="#{lv.Partenaire}s" itemValue="Partenaires / Partners" />
+                                <f:selectItem itemLabel="#{lv.Opportunites}" itemValue="Opportunités / Opportunities" />
+                                <f:selectItem itemLabel="Mobile" itemValue="Mobile / Mobile" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{multimediaMB.selectedCritere.type.equals('Numeric') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Min}" />
+                                <p:spinner value="#{multimediaMB.selectedCritere.valNum1}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Max}" />
+                                <p:spinner value="#{multimediaMB.selectedCritere.valNum2}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <div style="display: #{multimediaMB.selectedCritere.type.equals('Date') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Debut}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{multimediaMB.selectedCritere.valDate1}" size="14" showOn="button" title="#{lv.Debut}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Fin}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{multimediaMB.selectedCritere.valDate2}" size="14" showOn="button" title="#{lv.Fin}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-2 ui-md-2 ui-sm-12 ui-g-nopad">
+                    <p:commandButton disabled="#{!multimediaMB.routine.raf}" icon="raf" style="font-size: 9pt; font-weight: bold; margin-top: 20px;" actionListener="#{multimediaMB.rechercheMultimedia()}" update="grille,btn_cmd" value="#{lv.Rechercher}" />
+                </div>
+            </div>
+
+            <p:dataTable disabledTextSelection="false" reflow="true" id="grille" scrollHeight="#{(600 > sessionMB.routine.screenH) ? '' : (sessionMB.routine.screenH - 373)}" rows="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25)}" lazy="true" rowsPerPageTemplate="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25).intValue()},100,1000,2000" scrollable="true" rowStyleClass="rowStyle" sortMode="multiple" selectionMode="multiple" selection="#{multimediaMB.selectedListMultimedia}" rowKey="#{item.idmultimedia}" emptyMessage="#{lv.Grille_vide}" paginator="true" paginatorPosition="bottom" var="item" value="#{multimediaMB.lazylistMultimediaModel}">
+                <f:facet name="header">
+                    <h:outputText style=" color: #{!multimediaMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Liste} #{lv.Des} #{lv.Multimedia}#{!multimediaMB.selectedCritere.etat.equals('Actif') ? ' (' += lv.Corbeille += ')' : ''}" />
+                    <!--<p:commandButton id="toggler" type="button" value="#{lv.Colonne}" style="float: right; font-size: 7pt; color: blue;" icon="ui-icon-calculator" />
+                    <p:columnToggler datasource="grille" trigger="toggler" />-->
+                </f:facet>
+
+                <p:ajax event="rowSelect" listener="#{multimediaMB.rowClick()}" update=":dForm:btn_cmd" />
+                <p:ajax event="rowUnselect" listener="#{multimediaMB.rowClick()}" update=":dForm:btn_cmd" />
+
+                <p:column sortBy="#{item.titre}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Titre}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.titre : item.titreen}"/>
+                </p:column>
+                <p:column width="90" sortBy="#{item.categorie}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Categorie}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.categorie.subSequence(0, (item.categorie.indexOf(47) - 1)) : item.categorie.substring((item.categorie.indexOf(47) + 2))}"/>
+                </p:column>
+                <p:column width="90" sortBy="#{item.type}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Type}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.type.subSequence(0, (item.type.indexOf(47) - 1)) : item.type.substring((item.type.indexOf(47) + 2))}"/>
+                </p:column>
+                <p:column width="120" sortBy="#{item.taille}" exportable="true">
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Taille} (Ko)"/>
+                    </f:facet>
+                    <h:outputText value="#{item.taille / 1000}" >
+                        <f:convertNumber />
+                    </h:outputText>
+                </p:column>
+                <p:column width="100" style="text-align: center;" sortBy="#{item.cheminrelatif}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Apercu}"/>
+                    </f:facet>
+                    <h:graphicImage width="75" url="#{item.cheminrelatif}" />
+                </p:column>
+                <p:column sortBy="#{item.commentaire}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Commentaire}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.commentaire : item.commentaireen}"/>
+                </p:column>
+                <p:column width="90" sortBy="#{item.actif}" exportable="true" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Activer}"/>
+                    </f:facet>
+                    <p:selectBooleanCheckbox disabled="true" value="#{item.actif}" />
+                </p:column>
+                <p:column width="150" style="text-align: center;" sortBy="#{item.dateEnregistre}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Enregistrement}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateEnregistre}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <f:facet name="footer">
+                    <h:outputText style=" color: #{!multimediaMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Total} =  #{multimediaMB.listMultimedia.size()}" />
+                </f:facet>
+            </p:dataTable>
+
+            <div jsf:id="btn_cmd" style="padding-bottom: 2px; text-align: center; margin: auto; padding-top: 4px;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.mm_det}" disabled="#{!multimediaMB.routine.det}" widgetVar="det" icon="det" style="font-size: 9pt; font-weight: bold;" value="#{lv.Detruire}" actionListener="#{multimediaMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.mm_res}" disabled="#{!multimediaMB.routine.res}" widgetVar="res" icon="res" style="font-size: 9pt; font-weight: bold;" value="#{lv.Restaurer}" actionListener="#{multimediaMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton widgetVar="cor" icon="cor" disabled="#{!multimediaMB.routine.cor}" style="font-size: 9pt; font-weight: bold;" value="#{multimediaMB.selectedCritere.etat == 'Actif' ? lv.Corbeille : lv.Liste}" actionListener="#{multimediaMB.btnClick}" update=":form,@this,grille,btn_cmd" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 3px auto 3px auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton rendered="#{sessionMB.mm_add}" disabled="#{!multimediaMB.routine.add}" widgetVar="add" icon="add" style="font-size: 9pt; font-weight: bold;" value="#{lv.Ajouter}" actionListener="#{multimediaMB.btnClick}" update="grille,btn_cmd,:form" oncomplete="PF('widget_multimedia').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.mm_cop}" disabled="#{!multimediaMB.routine.cop}" widgetVar="cop" icon="cop" style="font-size: 9pt; font-weight: bold;" value="#{lv.Copier}" actionListener="#{multimediaMB.btnClick}" update=":form" oncomplete="PF('widget_multimedia').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.mm_mod}" disabled="#{!multimediaMB.routine.mof}" widgetVar="mod" icon="mod" style="font-size: 9pt; font-weight: bold;" value="#{lv.Modifier}" actionListener="#{multimediaMB.btnClick}" update=":form" oncomplete="PF('widget_multimedia').show()" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.mm_con}" disabled="#{!multimediaMB.routine.con}" widgetVar="con" icon="con" style="font-size: 9pt; font-weight: bold;" value="#{lv.Consulter}" actionListener="#{multimediaMB.btnClick}" update=":form" oncomplete="PF('widget_multimedia').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.mm_sup}" disabled="#{!multimediaMB.routine.sup}" widgetVar="sup" icon="sup" style="font-size: 9pt; font-weight: bold;" value="#{lv.Supprimer}" actionListener="#{multimediaMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" ajax="false" action="#{multimediaMB.imprimer()}" rendered="true" disabled="true" style="font-size: 9pt; font-weight: bold;" widgetVar="imp" icon="imp" value="#{lv.Imprimer}" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+            <p:dialog responsive="true" closeOnEscape="true" modal="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="conf_sup" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{lv.Confirmation}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="resources/tool_images/question.png" />
+                    <h:outputText value="#{lv.Question_onfirmer}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('conf_sup').hide()" />
+                    <p:commandButton icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="Ok" actionListener="#{multimediaMB.persist()}" update="grille,btn_cmd,form_info" onsuccess="PF('conf_sup').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+        </h:form>
+
+        <!-- ****************************************Editer multimedia************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form">
+            <p:dialog responsive="true" id="dialog_multimedia" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" height="#{600 > sessionMB.routine.screenH ? 350 : 475}" widgetVar="widget_multimedia" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{(multimediaMB.operation.equals('add') ? lv.Ajouter : (multimediaMB.operation.equals('cop') ? lv.Copier : (multimediaMB.operation.equals('mod') ? lv.Modifier : lv.Consulter)))} #{lv.Un} #{lv.Multimedia}" />
+                    <br/><h:panelGroup>
+                        <p:outputLabel rendered="#{multimediaMB.operation.equals('mod') or multimediaMB.operation.equals('con')}" style="color: grey;" value=" [ #{lv.DerniereModif_abrev}: " />
+                        <h:outputText rendered="#{multimediaMB.operation.equals('mod') or multimediaMB.operation.equals('con')}" style="color: grey;" value="#{multimediaMB.selectedMultimedia.derniereModif}" >
+                            <f:convertDateTime pattern="EEE dd/MMM/yyyy HH:mm" />
+                        </h:outputText>
+                        <p:outputLabel rendered="#{multimediaMB.operation.equals('mod') or multimediaMB.operation.equals('con')}" style="color: grey;" value=" ]" />
+                    </h:panelGroup>
+                </f:facet>
+
+                <div jsf:id="pan_multimedia" style="text-align: center; display: table;" class="ui-g ui-g-nopad">
+                    <div style="text-align: center; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <h:panelGrid style="text-align: justify;">
+                            <p:outputLabel style="" value="#{lv.Agence}:" for="tr_agence" />
+                            <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style} width: 150px;" autoWidth="false" id="tr_agence" value="#{multimediaMB.selectedAgence}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_agence_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <f:selectItem itemLabel="" itemValue="" />
+                                <f:selectItems value="#{multimediaMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}"/>
+                                <p:ajax event="change" partialSubmit="true" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel style="" value="#{lv.Fichier} [1]:" for="tr_chemin" />
+                            <h:panelGroup>
+                                <p:fileUpload accept="#{multimediaMB.selectedMultimedia.type.contains('Image') ? '.svg,.gif,.jpeg,.jpg,.png' : (multimediaMB.selectedMultimedia.type.contains('Audio') ? '.mp3,.wma,.flv,.amr' : (multimediaMB.selectedMultimedia.type.contains('Document') ? '.pdf,.doc,.xls,.zip,.rar,.iso,.jar,.txt,.sql,.pptx,.ppsx' : '.avi,.wmv,.mp4'))}" auto="true" update="appercu" fileUploadListener="#{multimediaMB.handleFileUpload}" disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style}" id="tr_chemin" allowTypes="#{multimediaMB.selectedMultimedia.type.contains('Image') ? '/(\\.|\\/)(svg|gif|jpe?g|png)$/' : (multimediaMB.selectedMultimedia.type.contains('Audio') ? '/(\\.|\\/)(mp3|wma|flv|amr)$/' : (multimediaMB.selectedMultimedia.type.contains('Document') ? '/(\\.|\\/)(pdf|doc|xls|zip|rar|iso|jar|txt|sql|pptx|ppsx)$/' : '/(\\.|\\/)(avi|wmv|mp4)$/'))}" label="#{lv.Choisir}" sizeLimit="#{multimediaMB.selectedMultimedia.type.contains('Image') ? '1000000' : '125000000'}" previewWidth="20" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                <p:lightBox id="appercu">
+                                    <h:outputLink value="#{multimediaMB.selectedMultimedia.cheminrelatif}" title="#{lv.Apercu}">
+                                        <p:graphicImage height="50" url="#{multimediaMB.selectedMultimedia.cheminrelatif}" />
+                                    </h:outputLink>
+                                </p:lightBox>
+                            </h:panelGroup>
+
+                            <p:outputLabel style="" value="#{lv.Titre} (#{lv.Francais}):" for="tr_titre" />
+                            <p:inputText disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style}" id="tr_titre" value="#{multimediaMB.selectedMultimedia.titre}" title="#{lv.Titre} (#{lv.Francais})" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Titre} (#{lv.Anglais}):" for="tr_titre_en" />
+                            <p:inputText disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style}" id="tr_titre_en" value="#{multimediaMB.selectedMultimedia.titreen}" title="#{lv.Titre} (#{lv.Anglais})" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="text-align: center; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <h:panelGrid style="text-align: justify;">
+                            <h:panelGrid style="text-align: justify;" columns="2">
+                                <h:panelGrid style="text-align: justify;">
+                                    <p:outputLabel style="" value="#{lv.Type}:" for="tr_type" />
+                                    <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style} width: 150px;" autoWidth="false" id="tr_type" value="#{multimediaMB.selectedMultimedia.type}" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                        <f:selectItem itemLabel="" itemValue="" />
+                                        <f:selectItem itemLabel="#{lv.Image}" itemValue="Image / Image" />
+                                        <f:selectItem itemLabel="#{lv.Audio}" itemValue="Audio / Audio" />
+                                        <f:selectItem itemLabel="#{lv.Video}" itemValue="Vidéo / Video" />
+                                        <f:selectItem itemLabel="#{lv.Document}" itemValue="Document / Document" />
+                                        <p:ajax event="change" update="tr_chemin,appercu" />
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <h:panelGrid style="text-align: center;">
+                                    <p:outputLabel style="" value="#{lv.Activer}:" for="tr_actif" />
+                                    <p:selectBooleanCheckbox disabled="#{!multimediaMB.esc}" id="tr_actif" value="#{multimediaMB.selectedMultimedia.actif}" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                </h:panelGrid>
+                            </h:panelGrid>
+
+                            <p:outputLabel style="" value="#{lv.Categorie}:" for="tr_categorie" />
+                            <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style} width: 150px;" autoWidth="false" id="tr_categorie" value="#{multimediaMB.selectedMultimedia.categorie}" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <f:selectItem itemLabel="" itemValue="" />
+                                <f:selectItem itemLabel="#{lv.Galerie}" itemValue="Galerie / Gallery" />
+                                <f:selectItem itemLabel="#{lv.Publicite}" itemValue="Publicité / Advertising" />
+                                <f:selectItem itemLabel="#{lv.Partenaire}s" itemValue="Partenaires / Partners" />
+                                <f:selectItem itemLabel="#{lv.Opportunites}" itemValue="Opportunités / Opportunities" />
+                                <f:selectItem itemLabel="Mobile" itemValue="Mobile / Mobile" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel style="" value="#{lv.Commentaire} (#{lv.Francais}):" for="tr_commentaire" />
+                            <p:inputTextarea autoResize="false" disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style}" id="tr_commentaire" value="#{multimediaMB.selectedMultimedia.commentaire}" title="#{lv.Commentaire} (#{lv.Francais})" rows="1" cols="23" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Commentaire} (#{lv.Anglais}):" for="tr_commentaire_en" />
+                            <p:inputTextarea autoResize="false" disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style}" id="tr_commentaire_en" value="#{multimediaMB.selectedMultimedia.commentaireen}" title="#{lv.Commentaire} (#{lv.Anglais})" rows="1" cols="23" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Lien} (http):" for="tr_lien" />
+                            <p:inputText disabled="#{!multimediaMB.egc}" style="#{multimediaMB.style}" id="tr_lien" value="#{multimediaMB.selectedMultimedia.lien}" title="#{lv.Lien} (http)" size="25" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                        </h:panelGrid>
+                    </div>
+                </div>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="#{multimediaMB.operation.equals('con') ? 'font-size: 10pt; font-weight: bold;' : 'font-size: 10pt; font-weight: bold; float: left;'}" value="#{multimediaMB.operation.equals('con') ? lv.Fermer : lv.Annuler}" immediate="true" oncomplete="PF('widget_multimedia').hide()" />
+                    <p:commandButton process="dialog_multimedia,:dForm" rendered="#{multimediaMB.esc}" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Enregistrer}" actionListener="#{multimediaMB.persist()}" partialSubmit="true" update=":dForm:grille,:dForm:btn_cmd,pan_multimedia,form_info"/>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Editer multimedia************************************************************************************************************************************************************************************************************** -->
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form_info">
+            <p:poll autoStart="#{multimediaMB.routine.vanish}" immediate="true" interval="3" listener="#{multimediaMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+            <p:dialog responsive="true" onShow="#{multimediaMB.routine.vanish ? 'PF(\'widget_multimedia\').hide()' : ''}" visible="#{multimediaMB.routine.showInfo}" modal="#{true or !multimediaMB.routine.vanish}" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{multimediaMB.routine.titleMessage} : #{multimediaMB.routine.contexteMessage}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="#{multimediaMB.routine.iconMessage}" />
+                    <h:outputText style="#{(multimediaMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (multimediaMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{multimediaMB.routine.message}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="text-align: center; margin: auto;">
+                    <p:commandButton icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{multimediaMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,193 @@
+
+.ui-menuitem .ui-state-hover{
+    /*background: linear-gradient(goldenrod, white);*/
+    background: linear-gradient(lightsteelblue, white);
+    color: #045491;
+    font-weight: bold;
+}
+.ui-menu, .ui-menu .ui-menu-child{
+    background-color: whitesmoke;
+}
+
+.ui-panel-titlebar, .ui-carousel-header, .ui-carousel-footer, .ui-fieldset .ui-fieldset-legend, .ui-steps-item, .ui-menu .ui-menu-list .ui-widget-header, .ui-datatable-header, .ui-datatable-footer, .ui-dialog-titlebar, .ui-button{
+    /*background: linear-gradient(goldenrod, white) !important;*/
+    background: linear-gradient(lightsteelblue, white);
+    color: #0d52ce;
+    font-weight: bold;
+    text-shadow: none;
+}
+
+.ui-galleria-panel, .ui-galleria-frame {
+    text-align: center !important;
+    width: 1300px;
+    height: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -650px; /* width divided by 2 */
+    margin-top: -150px; /* height divided by 2 */
+}
+
+.dynamic_size_galleria{
+    position: relative !important;
+    width: 100% !important;
+    text-align: center !important;
+}
+
+.ui-galleria-panel-wrapper{
+    width: 100% !important;
+    text-align: center !important;
+}
+
+.ui-galleria-caption{
+    background: linear-gradient(transparent, darkgray);
+    color: white !important;
+    font-weight: bold !important;
+    /*text-shadow: 2px 2px 2px white;*/
+}
+
+.ui-panel-images {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+body .ui-dialog.ui-widget-content .ui-dialog-titlebar, body .ui-dialog .ui-dialog-titlebar {
+    background: linear-gradient(#99eeff, white) !important;
+}
+
+.ui-tagcloud a:hover{
+    background: linear-gradient(#ff6666, white);
+}
+
+.ui-tabs .ui-tabs-nav{
+    background: linear-gradient(whitesmoke, white);
+}
+
+.ui-widget-header .ui-state-default{
+    background: linear-gradient(#99cc99, white);
+}
+
+.ui-tabs .ui-tabs-nav .ui-tabs-selected{
+    background: linear-gradient(lightsteelblue, white);
+}
+
+#top {
+    background: white;
+    /*background: linear-gradient(lightgray, lightgray, white);
+    /*background-image: url("../tool_images/link_pts.png") !important;*/
+    /*background-color: whitesmoke;*/
+    /*green = #99cc99
+    red = #ff6666
+    yellow = #ffff99
+    color: white;*/
+    padding: 0px;
+    margin: 0px 0px 1px 0px;
+    text-align: center;
+}
+
+#bottom {
+    position: relative;
+    /*background-color: #c2dfef;*/
+    padding: 5px;
+    margin: 1px 0px 0px 0px;
+    height: 60px;
+}
+
+#steps {
+    margin-bottom: 3px;
+    cursor: pointer;
+}
+
+#left {
+    float: left;
+    /*background-color: #ece3a5;*/
+    padding: 5px;
+    width: 250px;
+    /*height: 600px;*/
+}
+
+#right {
+    float: right;
+    /*background-color: #ece3a5;*/
+    padding: 5px;
+    width: 250px;
+    /*height: 600px;*/
+}
+
+.center_content {
+    position: relative;
+    background-color: #dddddd;
+    padding: 5px;
+}
+
+.left_content {
+    background-color: #dddddd;
+    padding: 5px;
+    margin-left: 170px;
+}
+
+.right_content {
+    /*background-color: #dddddd;*/
+    padding: 5px;
+    margin: 0px 261px 0px 261px;
+    /*height: 600px;*/
+}
+
+#top a:link, #top a:visited {
+    color: white;
+    font-weight : bold;
+    text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+    color: black;
+    font-weight : bold;
+    text-decoration : underline;
+}
+
+.cancelIcon{
+    background-image: url("../icon_images/red_cross.png") !important;
+}
+
+.okIcon{
+    background-image: url("../icon_images/ok.png") !important;
+}
+
+.seenIcon{
+    background-image: url("../icon_images/eye.png") !important;
+}
+
+.raf{
+    background-image: url("../icon_images/loop.png") !important;
+}
+
+.word{
+    background-image: url("../icon_images/word.png") !important;
+}
+
+.pdf{
+    background-image: url("../icon_images/pdf.png") !important;
+}
+
+.momo{
+    background-image: url("../icon_images/mobile-payment.png") !important;
+}
+
+.francais{
+    background-image: url("../tool_images/flagfrance.png") !important;
+    background-color: transparent;
+}
+
+.anglais{
+    background-image: url("../tool_images/flaganglais.png") !important;
+    background-color: transparent;
+}
+
+.ui-fileupload{
+    width: 235px;
+}
+
+.ui-fileupload-files td{
+    display: none;
+}

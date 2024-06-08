@@ -1,0 +1,439 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./moduleVeille.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+        <style id="tableStyle">
+            .ui-columntoggler{
+                width: 150px;
+                height: 105px !important;
+            }
+        </style>
+        <h:form id="dForm">
+
+            <div jsf:id="btn_rch" style="padding-bottom: 2px; text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-2 ui-md-2 ui-sm-12 ui-g-nopad">
+                    <h:panelGrid style="margin: auto;">
+                        <p:outputLabel style="" value="#{lv.Filtre}" />
+                        <p:selectOneMenu style="width: 145px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{articleMB.selectedCritere.attribut}">
+                            <f:selectItems value="#{articleMB.listCritereFiltre}" var="critere" itemLabel="#{critere.libelle}" itemValue="#{critere.attribut}" />
+                            <p:ajax event="change" listener="#{articleMB.selectCritere()}" update="btn_rch" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{articleMB.selectedCritere.type.equals('String') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:inputText value="#{articleMB.selectedCritere.valString}" size="23" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{articleMB.selectedCritere.type.equals('Boolean') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectBooleanCheckbox value="#{articleMB.selectedCritere.valBool}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{(articleMB.selectedCritere.type.equals('Select') or articleMB.selectedCritere.type.equals('Select2') or articleMB.selectedCritere.type.equals('Select3')) ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Agence}" />
+                            <p:selectOneMenu style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{articleMB.selectedCritere.valSelect}">
+                                <f:selectItems value="#{articleMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}" />
+                                <p:ajax event="change" update="btn_rch" partialSubmit="true" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{articleMB.selectedCritere.type.equals('Select3') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Concurrent}" />
+                            <p:selectOneMenu disabled="#{!articleMB.selectedCritere.type.equals('Select3')}" style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{articleMB.selectedCritere.valSelect2}">
+                                <f:selectItem itemLabel="#{lv.Toutes}" itemValue="" />
+                                <f:selectItems value="#{articleMB.listConcurrent}" var="item" itemLabel="#{sessionMB.locale.equals('fr') ? item.libelle : item.label}" itemValue="#{item.idconcurrent}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{articleMB.selectedCritere.type.equals('Numeric') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Min}" />
+                                <p:spinner value="#{articleMB.selectedCritere.valNum1}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Max}" />
+                                <p:spinner value="#{articleMB.selectedCritere.valNum2}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <div style="display: #{articleMB.selectedCritere.type.equals('Date') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Debut}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{articleMB.selectedCritere.valDate1}" size="14" showOn="button" title="#{lv.Debut}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Fin}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{articleMB.selectedCritere.valDate2}" size="14" showOn="button" title="#{lv.Fin}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <p:commandButton disabled="#{!articleMB.routine.raf}" icon="raf" style="font-size: 9pt; font-weight: bold; margin-top: 20px;" actionListener="#{articleMB.rechercheArticle()}" update="grille,btn_cmd,btn_rch" value="#{lv.Rechercher}" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <p:menuButton style="margin-top: 20px; font-size: 8pt;" value="#{lv.Operations}">
+                            <p:menuitem immediate="true" ajax="false" action="#{articleMB.exportXlsFile()}" rendered="#{sessionMB.at_imp}" disabled="#{!articleMB.routine.imp}" style="font-size: 9pt; font-weight: bold;" value=" #{lv.Exporter}" iconPos="left" icon="excel" />
+                        </p:menuButton>
+                    </div>
+                </div>
+            </div>
+
+            <p:dataTable disabledTextSelection="false" reflow="true" id="grille" scrollHeight="#{(600 > sessionMB.routine.screenH) ? '' : (sessionMB.routine.screenH - 373)}" rows="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25)}" lazy="true" rowsPerPageTemplate="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25).intValue()},100,1000,2000" scrollable="true" rowStyleClass="rowStyle" sortMode="multiple" selectionMode="multiple" selection="#{articleMB.selectedListArticle}" rowKey="#{item.idarticle}" emptyMessage="#{lv.Grille_vide}" paginator="true" paginatorPosition="bottom" var="item" value="#{articleMB.lazylistArticleModel}">
+                <f:facet name="header">
+                    <h:outputText style=" color: #{!articleMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Liste} #{lv.Des} #{lv.Article}s#{!articleMB.selectedCritere.etat.equals('Actif') ? ' (' += lv.Corbeille += ')' : ''}" />
+                    <!--<p:commandButton id="toggler" type="button" value="#{lv.Colonne}" style="float: right; font-size: 7pt; color: blue;" icon="ui-icon-calculator" />
+                    <p:columnToggler datasource="grille" trigger="toggler" />-->
+                </f:facet>
+
+                <p:ajax event="rowSelect" listener="#{articleMB.rowClick()}" update=":dForm:btn_cmd" />
+                <p:ajax event="rowUnselect" listener="#{articleMB.rowClick()}" update=":dForm:btn_cmd" />
+
+                <p:column width="100" style="text-align: center;" sortBy="#{item.cheminrelatif}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Apercu}"/>
+                    </f:facet>
+                    <h:graphicImage width="75" url="#{item.photoRelatif}" />
+                </p:column>
+                <p:column sortBy="#{item.libelleLabel}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Article}"/>
+                    </f:facet>
+                    <h:outputText title="#{item.code} - #{sessionMB.today > item.dateperemption ? lv.Peremption += ' = ' += item.dateperemption.toLocaleString().replaceAll('00:00:00', '') : ''}" style="#{sessionMB.today > item.dateperemption ? 'color: red;' : ''}" value="#{sessionMB.locale.equals('fr') ? item.libelle : item.label}"/>
+                </p:column>
+                <p:column width="75" style="text-align: right;" sortBy="#{item.coutachatttc}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Cout}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.coutachatttc}">
+                        <f:convertNumber maxFractionDigits="2" />
+                    </h:outputText>
+                </p:column>
+                <p:column width="75" style="text-align: right;" sortBy="#{item.prixunitttc}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Vente}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.prixunitttc}">
+                        <f:convertNumber maxFractionDigits="2" />
+                    </h:outputText>
+                </p:column>
+                <p:column width="75" style="text-align: right;" sortBy="#{item.quantitestock}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Stock_net}"/>
+                    </f:facet>
+                    <h:outputText title="#{item.unite} [#{lv.Alerte} = #{item.quantitealerte}]" style="#{item.quantitealerte >= item.quantitestock ? 'color: red;' : 'color: violet;'}" value="#{item.quantitestock}">
+                        <f:convertNumber maxFractionDigits="2" />
+                    </h:outputText>
+                </p:column>
+                <p:column width="85" style="text-align: center;" sortBy="#{item.unite}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Unitee}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.unite.subSequence(0, (item.unite.indexOf(47) - 1)) : item.unite.substring((item.unite.indexOf(47) + 2))}"/>
+                </p:column>
+                <p:column width="160" style="text-align: center;" sortBy="#{item.dateEnregistre}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Enregistrement}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateEnregistre}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <f:facet name="footer">
+                    <h:outputText style=" color: #{!articleMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Total} =  #{articleMB.listArticle.size()}" />
+                </f:facet>
+            </p:dataTable>
+
+            <div jsf:id="btn_cmd" style="padding-bottom: 2px; text-align: center; margin: auto; padding-top: 4px;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.at_det}" disabled="#{!articleMB.routine.det}" widgetVar="det" icon="det" style="font-size: 9pt; font-weight: bold;" value="#{lv.Detruire}" actionListener="#{articleMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.at_res}" disabled="#{!articleMB.routine.res}" widgetVar="res" icon="res" style="font-size: 9pt; font-weight: bold;" value="#{lv.Restaurer}" actionListener="#{articleMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton widgetVar="cor" icon="cor" disabled="#{!articleMB.routine.cor}" style="font-size: 9pt; font-weight: bold;" value="#{articleMB.selectedCritere.etat == 'Actif' ? lv.Corbeille : lv.Liste}" actionListener="#{articleMB.btnClick}" update=":form,@this,grille,btn_cmd" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 3px auto 3px auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton rendered="#{sessionMB.at_add}" disabled="#{!articleMB.routine.add}" widgetVar="add" icon="add" style="font-size: 9pt; font-weight: bold;" value="#{lv.Ajouter}" actionListener="#{articleMB.btnClick}" update="grille,btn_cmd,:form" oncomplete="PF('widget_article').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.at_cop}" disabled="#{!articleMB.routine.cop}" widgetVar="cop" icon="cop" style="font-size: 9pt; font-weight: bold;" value="#{lv.Copier}" actionListener="#{articleMB.btnClick}" update=":form" oncomplete="PF('widget_article').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.at_mod}" disabled="#{!articleMB.routine.mof}" widgetVar="mod" icon="mod" style="font-size: 9pt; font-weight: bold;" value="#{lv.Modifier}" actionListener="#{articleMB.btnClick}" update=":form" oncomplete="PF('widget_article').show()" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.at_con}" disabled="#{!articleMB.routine.con}" widgetVar="con" icon="con" style="font-size: 9pt; font-weight: bold;" value="#{lv.Consulter}" actionListener="#{articleMB.btnClick}" update=":form" oncomplete="PF('widget_article').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.at_sup}" disabled="#{!articleMB.routine.sup}" widgetVar="sup" icon="sup" style="font-size: 9pt; font-weight: bold;" value="#{lv.Supprimer}" actionListener="#{articleMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" ajax="false" action="#{articleMB.imprimer()}" rendered="true" disabled="true" style="font-size: 9pt; font-weight: bold;" widgetVar="imp" icon="imp" value="#{lv.Imprimer}" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+            <p:dialog responsive="true" closeOnEscape="true" modal="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="conf_sup" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{lv.Confirmation}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="resources/tool_images/question.png" />
+                    <h:outputText value="#{lv.Question_onfirmer}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('conf_sup').hide()" />
+                    <p:commandButton icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="Ok" actionListener="#{articleMB.persist()}" update="grille,btn_cmd,form_info" onsuccess="PF('conf_sup').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+        </h:form>
+
+        <!-- ****************************************Editer article************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form">
+            <p:dialog responsive="true" id="dialog_article" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" height="#{600 > sessionMB.routine.screenH ? 350 : 500}" widgetVar="widget_article" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{(articleMB.operation.equals('add') ? lv.Ajouter : (articleMB.operation.equals('cop') ? lv.Copier : (articleMB.operation.equals('mod') ? lv.Modifier : lv.Consulter)))} #{lv.Unc} #{lv.Article}" />
+                    <br/><h:panelGroup>
+                        <p:outputLabel rendered="#{articleMB.operation.equals('mod') or articleMB.operation.equals('con')}" style="color: grey;" value=" [ #{lv.DerniereModif_abrev}: " />
+                        <h:outputText rendered="#{articleMB.operation.equals('mod') or articleMB.operation.equals('con')}" style="color: grey;" value="#{articleMB.selectedArticle.derniereModif}" >
+                            <f:convertDateTime pattern="EEE dd/MMM/yyyy HH:mm" />
+                        </h:outputText>
+                        <p:outputLabel rendered="#{articleMB.operation.equals('mod') or articleMB.operation.equals('con')}" style="color: grey;" value=" ]" />
+                    </h:panelGroup>
+                </f:facet>
+
+                <div jsf:id="pan_article" style="text-align: center; display: table;" class="ui-g ui-g-nopad">
+                    <p:tabView style="text-align: justify;" id="tabView_item">
+                        <p:tab title="#{lv.Identification_net}">
+                            <div style="text-align: center; display: table;" class="ui-g ui-g-nopad">
+                                <div style="text-align: center; margin: auto; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                                    <h:panelGrid id="identification" style="text-align: justify;">
+                                        <p:outputLabel style="" value="#{lv.Agence}:" for="tr_agence" />
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!articleMB.egc}" style="#{articleMB.style} width: 150px;" autoWidth="false" id="tr_agence" value="#{articleMB.selectedAgence}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                            <f:selectItem itemLabel="" itemValue="" />
+                                            <f:selectItems value="#{articleMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}" />
+                                            <p:ajax event="change" update="tabView_item" partialSubmit="true" />
+                                        </p:selectOneMenu>
+
+                                        <h:panelGrid style="text-align: justify;">
+                                            <p:outputLabel style="" value="#{lv.Code} / #{lv.Reference_abrev}:" for="tr_code" />
+                                            <p:inputText disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_code" value="#{articleMB.selectedArticle.code}" title="#{lv.Code} / #{lv.Reference_abrev}" size="12" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                        </h:panelGrid>
+
+                                        <p:outputLabel style="" value="#{lv.Num_lot}:" for="tr_numlot" />
+                                        <p:inputText disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_numlot" value="#{articleMB.selectedArticle.numlot}" title="#{lv.Num_lot}" size="12" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                        <p:outputLabel style="" value="#{lv.Libelle} (#{lv.Francais}):" for="tr_libelle" />
+                                        <p:inputTextarea disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_libelle" value="#{articleMB.selectedArticle.libelle}" title="#{lv.Libelle}" rows="1" cols="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                        <p:outputLabel style="" value="#{lv.Libelle} (#{lv.Anglais}):" for="tr_libelle_en" />
+                                        <p:inputTextarea disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_libelle_en" value="#{articleMB.selectedArticle.label}" title="#{lv.Libelle}" rows="1" cols="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                    </h:panelGrid>
+                                </div>
+                                <div style="text-align: center; margin: auto; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                                    <h:panelGrid style="text-align: justify;">
+                                        <p:outputLabel style="" value="#{lv.Cout} (XAF):" for="tr_coutachatttc" />
+                                        <p:spinner min="0" disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_coutachatttc" value="#{articleMB.selectedArticle.coutachatttc}" title="#{lv.Cout} (XAF)" size="10" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                            <p:ajax event="change" update="tr_prixunitttc,tr_coutachatttc" partialSubmit="true" />
+                                        </p:spinner>
+
+                                        <h:panelGrid columns="2">
+                                            <h:panelGrid style="text-align: justify;">
+                                                <p:outputLabel style="" value="#{lv.Vente} (XAF):" for="tr_prixunitttc" />
+                                                <p:spinner min="#{articleMB.selectedArticle.coutachatttc}" disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_prixunitttc" value="#{articleMB.selectedArticle.prixunitttc}" title="#{lv.Vente} (XAF)" size="10" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                                    <p:ajax event="change" update="tr_prixunitttc,tr_coutachatttc" partialSubmit="true" />
+                                                </p:spinner>
+                                            </h:panelGrid>
+
+                                            <h:panelGrid style="text-align: center;">
+                                                <p:outputLabel style="" value="#{lv.En_vente}:" for="tr_envente" />
+                                                <p:selectBooleanCheckbox disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_envente" value="#{articleMB.selectedArticle.envente}" title="#{lv.En_vente}" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+
+                                        <h:panelGrid columns="2" style="text-align: justify;">
+                                            <p:outputLabel style="" value="#{lv.Photo}:" for="tr_photo" />
+                                            <p:commandLink actionListener="#{articleMB.prepareCapture}" id="picture" rendered="#{articleMB.egc}" style="text-decoration: none; background-color: transparent;" immediate="true" oncomplete="PF('widget_cameraphoto').show()">
+                                                <p:graphicImage height="30" url="resources/tool_images/cameraPhoto.png" title="#{lv.Camera}" />
+                                            </p:commandLink>
+                                        </h:panelGrid>
+                                        <h:panelGroup>
+                                            <p:fileUpload accept=".svg,.gif,.jpeg,.jpg,.png" auto="true" update="appercu" fileUploadListener="#{articleMB.handleFileUpload}" disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_photo" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" label="#{lv.Choisir}" sizeLimit="700000" previewWidth="25" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                            <p:lightBox id="appercu">
+                                                <h:outputLink value="#{articleMB.selectedArticle.photoRelatif}" title="#{lv.Apercu}">
+                                                    <p:graphicImage height="50" url="#{articleMB.selectedArticle.photoRelatif}" />
+                                                </h:outputLink>
+                                            </p:lightBox>
+                                            <p:message for="tr_photo"/>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="#{lv.Indicateur} #{lv.Du} #{lv.Stock_net}">
+                            <div style="text-align: center; display: table;" class="ui-g ui-g-nopad">
+                                <div style="text-align: center; margin: auto; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                                    <h:panelGrid style="text-align: justify;">
+                                        <p:outputLabel style="" value="#{lv.Date_peremption}:" for="tr_dateperemption" />
+                                        <h:panelGrid id="peremption" columns="2" style="text-align: justify;">
+                                            <p:selectBooleanCheckbox disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_peremption" value="#{articleMB.selectedArticle.peremption}" title="#{lv.Peremption} ?" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                                <p:ajax event="change" update="peremption" partialSubmit="true" />
+                                            </p:selectBooleanCheckbox>   
+                                            <p:calendar showTodayButton="true" locale="#{sessionMB.locale}" size="12" navigator="true" pattern="dd/MM/yyyy" showOn="button" rendered="#{articleMB.selectedArticle.peremption}" disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_dateperemption" value="#{articleMB.selectedArticle.dateperemption}" title="#{lv.Date_peremption}" showWeek="true" yearRange="c-100:c+10" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                        </h:panelGrid>
+
+                                        <p:outputLabel style="" value="#{lv.Unitee}:" for="tr_unite" />
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!articleMB.egc}" style="#{articleMB.style} width: 75px;" autoWidth="false" id="tr_unite" value="#{articleMB.selectedArticle.unite}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                            <f:selectItem itemLabel="#{lv.Nombre}" itemValue=". / ." />
+                                            <f:selectItem itemLabel="#{lv.Alveole}" itemValue="Alvéole / Alveolus" />
+                                            <f:selectItem itemLabel="#{lv.Ballot}" itemValue="Ballot / Bundle" />
+                                            <f:selectItem itemLabel="#{lv.Barre}" itemValue="Barre / Bar" />
+                                            <f:selectItem itemLabel="#{lv.Bidon}" itemValue="Bidon / Can" />
+                                            <f:selectItem itemLabel="#{lv.Boite}" itemValue="Boîte / Box" />
+                                            <f:selectItem itemLabel="#{lv.Bouteille}" itemValue="Bouteille / Bottle" />
+                                            <f:selectItem itemLabel="#{lv.Brouette}" itemValue="Brouette / Wheelbarrow" />
+                                            <f:selectItem itemLabel="#{lv.Camion}" itemValue="Camion / Truck" />
+                                            <f:selectItem itemLabel="#{lv.Carton}" itemValue="Carton / Box" />
+                                            <f:selectItem itemLabel="#{lv.Filet}" itemValue="Filet / Net" />
+                                            <f:selectItem itemLabel="#{lv.Flacon}" itemValue="Flacon / Flask" />
+                                            <f:selectItem itemLabel="#{lv.Heure}" itemValue="Heur / Hour" />
+                                            <f:selectItem itemLabel="#{lv.Kilogramme}" itemValue="Kg / Kg" />
+                                            <f:selectItem itemLabel="#{lv.Liasse}" itemValue="Liasse / Wad" />
+                                            <f:selectItem itemLabel="#{lv.Litre}" itemValue="Litre / Litre" />
+                                            <f:selectItem itemLabel="#{lv.Metre}" itemValue="Mètre / Metre" />
+                                            <f:selectItem itemLabel="#{lv.Paquet}" itemValue="Paquet / Package" />
+                                            <f:selectItem itemLabel="#{lv.Piece}" itemValue="Pièce / Piece" />
+                                            <f:selectItem itemLabel="#{lv.Plaquette}" itemValue="Plaquette / Tablet" />
+                                            <f:selectItem itemLabel="#{lv.Rouleau}" itemValue="Rouleau / Roll" />
+                                            <f:selectItem itemLabel="#{lv.Sac}" itemValue="Sac / Bag" />
+                                            <f:selectItem itemLabel="#{lv.Sachet}" itemValue="Sachet / Sachet" />
+                                            <f:selectItem itemLabel="#{lv.Seau}" itemValue="Seau / Bucket" />
+                                            <f:selectItem itemLabel="#{lv.Tube}" itemValue="Tube / Tube" />
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                </div>
+                                <div style="text-align: center; margin: auto; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                                    <h:panelGrid style="text-align: justify;">
+                                        <p:fieldset style="font-size: 10pt; font-weight: bold;">
+                                            <f:facet name="legend">
+                                                <h:outputText value="#{lv.Magasin}" />
+                                            </f:facet>
+                                            <h:panelGrid style="text-align: justify;">
+                                                <p:outputLabel style="" value="#{lv.Quantite}:" for="tr_quantitestock" />
+                                                <p:spinner min="0" disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_quantitestock" value="#{articleMB.selectedArticle.quantitestock}" title="#{lv.Quantite} (#{lv.Magasin})" size="10" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                                <p:outputLabel style="" value="#{lv.Minimum}:" for="tr_quantitemin" />
+                                                <p:spinner min="0" disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_quantitemin" value="#{articleMB.selectedArticle.quantitemin}" title="#{lv.Minimum} (#{lv.Magasin})" size="10" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                                <p:outputLabel style="" value="#{lv.Alerte}:" for="tr_quantitealerte" />
+                                                <p:spinner min="0" disabled="#{!articleMB.egc}" style="#{articleMB.style}" id="tr_quantitealerte" value="#{articleMB.selectedArticle.quantitealerte}" title="#{lv.Alerte} (#{lv.Magasin})" size="10" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                            </h:panelGrid>
+                                        </p:fieldset>
+                                    </h:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="#{articleMB.operation.equals('con') ? 'font-size: 10pt; font-weight: bold;' : 'font-size: 10pt; font-weight: bold; float: left;'}" value="#{articleMB.operation.equals('con') ? lv.Fermer : lv.Annuler}" immediate="true" oncomplete="PF('widget_article').hide()" />
+                    <p:commandButton process="dialog_article,:dForm" rendered="#{articleMB.esc}" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Enregistrer}" actionListener="#{articleMB.persist()}" partialSubmit="true" update=":dForm:grille,:dForm:btn_cmd,pan_article,form_info"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog responsive="true" id="dialog_cameraphoto" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="widget_cameraphoto" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{lv.Ajouter} #{lv.Unec} #{lv.Photo}" />
+                </f:facet>
+
+                <p:photoCam width="270" height="190" format="png" widgetVar="pc" listener="#{articleMB.onCapture}" />
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('widget_cameraphoto').hide()" />
+                    <p:commandButton process="dialog_cameraphoto" onclick="PF('pc').capture()" icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Capture}" partialSubmit="true" update=":form:pan_photocopper"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog responsive="true" id="dialog_photocopper" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="widget_photocopper" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{lv.Cadrage}" />
+                </f:facet>
+
+                <p:imageCropper id="pan_photocopper" minSize="50,50" value="#{articleMB.croppedImage}" image="/#{articleMB.imageTempRelatif}" />
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" actionListener="#{articleMB.deleteTempImage()}" immediate="true" oncomplete="PF('widget_photocopper').hide()" />
+                    <p:commandButton process="dialog_photocopper" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Valider}" partialSubmit="true" actionListener="#{articleMB.crop}" update="tabView_item:tr_photo,tabView_item:appercu,pan_photocopper"/>
+                </h:panelGrid>
+                <p:messages />
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Editer article************************************************************************************************************************************************************************************************************** -->
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form_info">
+            <p:poll autoStart="#{articleMB.routine.vanish}" immediate="true" interval="3" listener="#{articleMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+            <p:dialog responsive="true" onShow="#{articleMB.routine.vanish ? 'PF(\'widget_article\').hide()' : ''}" visible="#{articleMB.routine.showInfo}" modal="#{true or !articleMB.routine.vanish}" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{articleMB.routine.titleMessage} : #{articleMB.routine.contexteMessage}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="#{articleMB.routine.iconMessage}" />
+                    <h:outputText style="#{(articleMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (articleMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{articleMB.routine.message}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="text-align: center; margin: auto;">
+                    <p:commandButton icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{articleMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+    </ui:define>
+</ui:composition>

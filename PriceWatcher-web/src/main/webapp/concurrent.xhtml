@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./moduleVeille.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="content">
+        <style id="tableStyle">
+            .ui-columntoggler{
+                width: 150px;
+                height: 135px !important;
+            }
+        </style>
+        <h:form id="dForm">
+
+            <div jsf:id="btn_rch" style="padding-bottom: 2px; text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <h:panelGrid style="margin: auto;">
+                        <p:outputLabel style="" value="#{lv.Filtre}" />
+                        <p:selectOneMenu style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{concurrentMB.selectedCritere.attribut}">
+                            <f:selectItems value="#{concurrentMB.listCritereFiltre}" var="critere" itemLabel="#{critere.libelle}" itemValue="#{critere.attribut}" />
+                            <p:ajax event="change" listener="#{concurrentMB.selectCritere()}" update="btn_rch" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{concurrentMB.selectedCritere.type.equals('String') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:inputText value="#{concurrentMB.selectedCritere.valString}" size="25" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{concurrentMB.selectedCritere.type.equals('Boolean') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectBooleanCheckbox value="#{concurrentMB.selectedCritere.valBool}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{concurrentMB.selectedCritere.type.equals('Select') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Agence}" />
+                            <p:selectOneMenu style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{concurrentMB.selectedCritere.valSelect}">
+                                <f:selectItems value="#{concurrentMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}" />
+                                <p:ajax event="change" update="btn_rch" partialSubmit="true" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{concurrentMB.selectedCritere.type.equals('Numeric') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Min}" />
+                                <p:spinner value="#{concurrentMB.selectedCritere.valNum1}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Max}" />
+                                <p:spinner value="#{concurrentMB.selectedCritere.valNum2}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <div style="display: #{concurrentMB.selectedCritere.type.equals('Date') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Debut}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{concurrentMB.selectedCritere.valDate1}" size="14" showOn="button" title="#{lv.Debut}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Fin}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{concurrentMB.selectedCritere.valDate2}" size="14" showOn="button" title="#{lv.Fin}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-2 ui-md-2 ui-sm-12 ui-g-nopad">
+                    <p:commandButton disabled="#{!concurrentMB.routine.raf}" icon="raf" style="font-size: 9pt; font-weight: bold; margin-top: 20px;" actionListener="#{concurrentMB.rechercheConcurrent()}" update="grille,btn_cmd" value="#{lv.Rechercher}" />
+                </div>
+            </div>
+
+            <p:dataTable disabledTextSelection="false" reflow="true" id="grille" scrollHeight="#{(600 > sessionMB.routine.screenH) ? '' : (sessionMB.routine.screenH - 373)}" rows="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25)}" lazy="true" rowsPerPageTemplate="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25).intValue()},100,1000,2000" scrollable="true" rowStyleClass="rowStyle" sortMode="multiple" selectionMode="multiple" selection="#{concurrentMB.selectedListConcurrent}" rowKey="#{item.idconcurrent}" emptyMessage="#{lv.Grille_vide}" paginator="true" paginatorPosition="bottom" var="item" value="#{concurrentMB.lazylistConcurrentModel}">
+                <f:facet name="header">
+                    <h:outputText style=" color: #{!concurrentMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Liste} #{lv.Des} #{lv.Concurrent}s#{!concurrentMB.selectedCritere.etat.equals('Actif') ? ' (' += lv.Corbeille += ')' : ''}" />
+                    <!--<p:commandButton id="toggler" type="button" value="#{lv.Colonne}" style="float: right; font-size: 7pt; color: blue;" icon="ui-icon-calculator" />
+                    <p:columnToggler datasource="grille" trigger="toggler" />-->
+                </f:facet>
+
+                <p:ajax event="rowSelect" listener="#{concurrentMB.rowClick()}" update=":dForm:btn_cmd" />
+                <p:ajax event="rowUnselect" listener="#{concurrentMB.rowClick()}" update=":dForm:btn_cmd" />
+
+                <p:column sortBy="#{sessionMB.locale.equals('fr') ? item.libelle : item.label}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Concurrent}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.libelle : item.label}"/>
+                </p:column>
+                <p:column sortBy="#{sessionMB.locale.equals('fr') ? item.libelle : item.label}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Lien}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.lien}"/>
+                </p:column>
+                <p:column width="105" exportable="true" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Defaut}"/>
+                    </f:facet>
+                    <h:graphicImage rendered="#{item.defaut}" height="20" width="20" url="resources/icon_images/ok.png" />
+                </p:column>
+                <p:column width="150" style="text-align: center;" sortBy="#{item.dateEnregistre}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Enregistrement}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateEnregistre}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+                <p:column width="100" style="text-align: center;" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Total} #{lv.Article}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.veilleconcurrentCollection.size()}"/>
+                </p:column>
+
+                <f:facet name="footer">
+                    <h:outputText style=" color: #{!concurrentMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Total} =  #{concurrentMB.listConcurrent.size()}" />
+                </f:facet>
+            </p:dataTable>
+
+            <div jsf:id="btn_cmd" style="padding-bottom: 2px; text-align: center; margin: auto; padding-top: 4px;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.kt_det}" disabled="#{!concurrentMB.routine.det}" widgetVar="det" icon="det" style="font-size: 9pt; font-weight: bold;" value="#{lv.Detruire}" actionListener="#{concurrentMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.kt_res}" disabled="#{!concurrentMB.routine.res}" widgetVar="res" icon="res" style="font-size: 9pt; font-weight: bold;" value="#{lv.Restaurer}" actionListener="#{concurrentMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton widgetVar="cor" icon="cor" disabled="#{!concurrentMB.routine.cor}" style="font-size: 9pt; font-weight: bold;" value="#{concurrentMB.selectedCritere.etat == 'Actif' ? lv.Corbeille : lv.Liste}" actionListener="#{concurrentMB.btnClick}" update=":form,@this,grille,btn_cmd" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 3px auto 3px auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton rendered="#{sessionMB.kt_add}" disabled="#{!concurrentMB.routine.add}" widgetVar="add" icon="add" style="font-size: 9pt; font-weight: bold;" value="#{lv.Ajouter}" actionListener="#{concurrentMB.btnClick}" update="grille,btn_cmd,:form" oncomplete="PF('widget_concurrent').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.kt_cop}" disabled="#{!concurrentMB.routine.cop}" widgetVar="cop" icon="cop" style="font-size: 9pt; font-weight: bold;" value="#{lv.Copier}" actionListener="#{concurrentMB.btnClick}" update=":form" oncomplete="PF('widget_concurrent').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.kt_mod}" disabled="#{!concurrentMB.routine.mof}" widgetVar="mod" icon="mod" style="font-size: 9pt; font-weight: bold;" value="#{lv.Modifier}" actionListener="#{concurrentMB.btnClick}" update=":form" oncomplete="PF('widget_concurrent').show()" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.kt_con}" disabled="#{!concurrentMB.routine.con}" widgetVar="con" icon="con" style="font-size: 9pt; font-weight: bold;" value="#{lv.Consulter}" actionListener="#{concurrentMB.btnClick}" update=":form" oncomplete="PF('widget_concurrent').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.kt_sup}" disabled="#{!concurrentMB.routine.sup}" widgetVar="sup" icon="sup" style="font-size: 9pt; font-weight: bold;" value="#{lv.Supprimer}" actionListener="#{concurrentMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" ajax="false" action="#{concurrentMB.imprimer()}" rendered="true" disabled="true" style="font-size: 9pt; font-weight: bold;" widgetVar="imp" icon="imp" value="#{lv.Imprimer}" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+            <p:dialog responsive="true" closeOnEscape="true" modal="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="conf_sup" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{lv.Confirmation}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="resources/tool_images/question.png" />
+                    <h:outputText value="#{lv.Question_onfirmer}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('conf_sup').hide()" />
+                    <p:commandButton icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="Ok" actionListener="#{concurrentMB.persist()}" update="grille,btn_cmd,form_info" onsuccess="PF('conf_sup').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+        </h:form>
+
+        <!-- ****************************************Editer concurrent************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form">
+            <p:dialog responsive="true" id="dialog_concurrent" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="widget_concurrent" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{(concurrentMB.operation.equals('add') ? lv.Ajouter : (concurrentMB.operation.equals('cop') ? lv.Copier : (concurrentMB.operation.equals('mod') ? lv.Modifier : lv.Consulter)))} #{lv.Un} #{lv.Concurrent}" />
+                    <br/><h:panelGroup>
+                        <p:outputLabel rendered="#{concurrentMB.operation.equals('mod') or concurrentMB.operation.equals('con')}" style="color: grey;" value=" [ #{lv.DerniereModif_abrev}: " />
+                        <h:outputText rendered="#{concurrentMB.operation.equals('mod') or concurrentMB.operation.equals('con')}" style="color: grey;" value="#{concurrentMB.selectedConcurrent.derniereModif}" >
+                            <f:convertDateTime pattern="EEE dd/MMM/yyyy HH:mm" />
+                        </h:outputText>
+                        <p:outputLabel rendered="#{concurrentMB.operation.equals('mod') or concurrentMB.operation.equals('con')}" style="color: grey;" value=" ]" />
+                    </h:panelGroup>
+                </f:facet>
+
+                <div jsf:id="pan_concurrent" style="text-align: center; display: table;" class="ui-g ui-g-nopad">
+                    <div style="text-align: justify; margin: auto; width: 240px;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <h:panelGrid style="text-align: justify;">
+                            <p:outputLabel style="" value="#{lv.Agence}:" for="tr_agence" />
+                            <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!concurrentMB.egc}" style="#{concurrentMB.style} width: 150px;" autoWidth="false" id="tr_agence" value="#{concurrentMB.selectedAgence}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <f:selectItem itemLabel="" itemValue=""/>
+                                <f:selectItems value="#{concurrentMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}"/>
+                                <p:ajax event="change" update="pan_concurrent" partialSubmit="true" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel style="" value="#{lv.Libelle} (#{lv.Francais}):" for="tr_libelle" />
+                            <p:inputTextarea disabled="#{!concurrentMB.egc}" style="#{concurrentMB.style}" id="tr_libelle" value="#{concurrentMB.selectedConcurrent.libelle}" title="#{lv.Libelle}" rows="1" cols="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Libelle} (#{lv.Anglais}):" for="tr_libelle_en" />
+                            <p:inputTextarea disabled="#{!concurrentMB.egc}" style="#{concurrentMB.style}" id="tr_libelle_en" value="#{concurrentMB.selectedConcurrent.label}" title="#{lv.Libelle}" rows="1" cols="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Lien}:" for="tr_lien" />
+                            <p:inputText disabled="#{!concurrentMB.egc}" style="#{concurrentMB.style}" id="tr_lien" value="#{concurrentMB.selectedConcurrent.lien}" title="#{lv.Lien}" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <h:panelGrid columns="2" style="text-align: justify;">
+                                <p:outputLabel style="" value="#{lv.Defaut}:" for="tr_defaut" />
+                                <p:selectBooleanCheckbox disabled="#{!concurrentMB.esc}" id="tr_defaut" value="#{concurrentMB.selectedConcurrent.defaut}" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </div>
+                </div>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="#{concurrentMB.operation.equals('con') ? 'font-size: 10pt; font-weight: bold;' : 'font-size: 10pt; font-weight: bold; float: left;'}" value="#{concurrentMB.operation.equals('con') ? lv.Fermer : lv.Annuler}" immediate="true" oncomplete="PF('widget_concurrent').hide()" />
+                    <p:commandButton process="dialog_concurrent,:dForm" rendered="#{concurrentMB.esc}" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Enregistrer}" actionListener="#{concurrentMB.persist()}" partialSubmit="true" update=":dForm:grille,:dForm:btn_cmd,pan_concurrent,form_info"/>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Editer concurrent************************************************************************************************************************************************************************************************************** -->
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form_info">
+            <p:poll autoStart="#{concurrentMB.routine.vanish}" immediate="true" interval="3" listener="#{concurrentMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+            <p:dialog responsive="true" onShow="#{concurrentMB.routine.vanish ? 'PF(\'widget_concurrent\').hide()' : ''}" visible="#{concurrentMB.routine.showInfo}" modal="#{true or !concurrentMB.routine.vanish}" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{concurrentMB.routine.titleMessage} : #{concurrentMB.routine.contexteMessage}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="#{concurrentMB.routine.iconMessage}" />
+                    <h:outputText style="#{(concurrentMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (concurrentMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{concurrentMB.routine.message}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="text-align: center; margin: auto;">
+                    <p:commandButton icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{concurrentMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,397 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{sessionMB.locale}" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{sessionMB.watcher()}" />
+    </f:metadata>
+
+
+    <h:head>
+        <meta name="google" content="notranslate" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Gestion de la veille / Watcher management."/>
+        <meta name="keywords" content="veille, prix, observer, statistiques"/>
+        <link rel="icon" href="favicon.png" type="image/png" />
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />
+        <link href="./resources/css/cssLayoutModule.css" rel="stylesheet" type="text/css" />
+        <script language="JavaScript" type="text/javascript" src="./resources/javaScript/js.js" /><script language="JavaScript" type="text/javascript" src="./resources/javaScript/webcam.js" />
+        <title>#{lv.Gestion} #{lv.Dela} #{lv.Veille}</title>
+        <style>
+            .ui-panel-titlebar{
+                background: darkgrey !important;
+            }
+        </style>
+    </h:head>
+
+    <h:body onload="setPageDimension()">
+        <f:view locale="#{sessionMB.locale}" encoding="UTF-8">
+
+            <div style="padding: 5px; background: yellowgreen;" id="top">
+                <h:outputText style="font-size: 10pt; font-weight: bold;" value="PriceWatcher 1.0 : #{lv.Veille}" />
+                <p:spacer width="5" />
+                <h:outputText style="font-size: 10pt; font-weight: bold;" value="/" />
+                <p:spacer width="5" />
+                <h:outputText style="font-size: 10pt; font-weight: bold;" value="#{lv.Bienvenu} : #{sessionMB.currentUser.sexe.contains('Masculin') ? 'Mr' : 'Mme'} #{sessionMB.currentUser.nomPrenom} [#{sessionMB.currentUser.login}]" />
+                <p:spacer width="5" />
+                <h:outputText style="font-size: 10pt; font-weight: bold;" value="/" />
+                <p:spacer width="5" />
+                <h:outputText style="font-size: 10pt; font-weight: bold;" value="#{lv.Agence} (#{sessionMB.selectedAgenceList.size()}) : #{sessionMB.selectAllAge ? lv.Toutes : sessionMB.selectedAgences}" />
+            </div>
+
+            <h:form id="menu_form">
+                <p:idleMonitor timeout="#{sessionMB.idleTime}" >
+                    <p:ajax event="idle" immediate="true"  listener="#{sessionMB.startBreakAjax()}" />
+                </p:idleMonitor>
+                <!--<p:poll autoStart="#{sessionMB.pause}" interval="#{((sessionMB.idleTime / 1000) * 2) + 60}" immediate="true" listener="#{sessionMB.meanWhile()}" />-->
+
+                <div style="text-align: center; margin: auto; background: #ecf0f5;" class="ui-g ui-g-nopad">
+                    <p:toolbar style="background: transparent; border-style: none;">
+                        <f:facet name="left">
+                            <p:megaMenu style="font-style: normal; font-size: 9pt; background: transparent; padding: 0px; border-style: none;" autoDisplay="false" activeIndex="0">
+                                <p:submenu label="#{lv.Fichier}">
+                                    <p:column>
+                                        <p:submenu label="#{lv.Parametrage}" >
+                                            <p:menuitem rendered="#{sessionMB.articl}" action="#{articleMB.article()}" immediate="true" value="#{lv.Article}" />
+                                            <p:menuitem rendered="#{sessionMB.cptoir}" action="#{concurrentMB.concurrent()}" immediate="true" value="#{lv.Concurrent}" />
+                                            <p:separator />
+                                            <p:menuitem onclick="PF('decon').show()" immediate="true" value="#{lv.Deconnexion}" />
+                                        </p:submenu>
+                                    </p:column>
+                                </p:submenu>
+
+                                <p:submenu rendered="#{sessionMB.traimp}" label="#{lv.Traitement}">
+                                    <p:column>
+                                        <p:submenu label="#{lv.Menu}" >
+                                            <p:menuitem rendered="#{sessionMB.no_sms}" action="#{notificationsMB.notifications()}" immediate="true" value="#{lv.Notification}" />
+                                        </p:submenu>
+                                    </p:column>
+                                </p:submenu>
+
+                                <p:submenu rendered="#{sessionMB.analyp}" label="#{lv.Analyse}" >
+                                    <p:column>
+                                        <p:submenu label="#{lv.Menu}" >
+                                            <p:menuitem rendered="#{sessionMB.an_stk}" action="#{analysePrixMB.analysePrix()}" immediate="true" value="#{lv.Analyse}" />
+                                        </p:submenu>
+                                    </p:column>
+                                </p:submenu>
+
+                                <p:submenu label="#{lv.Module}" >
+                                    <p:column>
+                                        <p:submenu label="#{lv.Lien}" >
+                                            <c:forEach items="#{sessionMB.listModuleUser}" var="module">
+                                                <p:menuitem actionListener="#{sessionMB.changeModule}" title="#{module.lien}" immediate="true" value="#{sessionMB.locale == 'en' ? module.label : module.libelle}" />
+                                            </c:forEach>
+                                        </p:submenu>
+                                    </p:column>
+                                </p:submenu>
+
+                                <p:submenu label="#{lv.Plus}">
+                                    <p:column>
+                                        <p:submenu label="#{lv.Menu}" >
+                                            <p:menuitem onstart="getScreenDimensions()" action="#{sessionMB.moduleVeille()}" immediate="true" value="#{lv.Tableau_bord}" />
+                                            <p:separator />
+                                            <p:menuitem actionListener="#{sessionMB.prepareUpdateProfile()}" oncomplete="PF('compte').show()" update=":forms:idFormDialog" immediate="true" value="#{lv.Profil}" />
+                                            <p:menuitem action="#{sessionMB.startBreak()}" immediate="true" value="#{lv.Pause}" />
+                                            <p:menuitem onstart="getScreenDimensions()" action="#{sessionMB.authentication()}" immediate="true" value="#{lv.Rafraichir}" />
+                                            <p:separator />
+                                            <p:menuitem onclick="PF('calculator').show()" immediate="true" value="#{lv.Calculatrice}" />
+                                            <p:menuitem rendered="#{sessionMB.locale == 'fr'}" action="#{sessionMB.anglais()}" immediate="true" value="English" />
+                                            <p:menuitem rendered="#{sessionMB.locale == 'en'}" action="#{sessionMB.francais()}" immediate="true" value="Français" />
+                                            <p:separator />
+                                            <p:menuitem action="portail.xhtml?faces-redirect=true" immediate="true" value="#{lv.Retour}" />
+                                        </p:submenu>
+                                    </p:column>
+                                </p:submenu>
+                            </p:megaMenu>
+                            <h:inputHidden id="sreenH" value="768"/>
+                            <h:inputHidden id="sreenW" value="1000"/>
+                        </f:facet>
+
+                        <f:facet name="right">
+                            <p:commandButton actionListener="#{sessionMB.clickAgency()}" style="color: #222d32; cursor: pointer !important; font-size: 11pt; background: #99eeff !important;" update="menu_form:tree" id="age_activ" immediate="true" value="#{lv.Agences}" />
+                        </f:facet>
+                    </p:toolbar>
+
+                    <p:overlayPanel modal="true" showEffect="slide" hideEffect="fade" my="left bottom" at="left top" style="border-radius: 0px; overflow: auto; overflow-style: move; height: 300px; width: 250px; font-size: 10pt; background: whitesmoke; text-align: justify;" for="age_activ">
+                        <p:tree dynamic="true" id="tree" animate="true" value="#{sessionMB.agenceTree}" propagateSelectionUp="false" propagateSelectionDown="false" var="age" selectionMode="checkbox" selection="#{sessionMB.selectedAgenceTree}" highlight="true" style="display: inline; border-style: none;">
+                            <p:ajax partialSubmit="true" global="false" update="tree" event="select" listener="#{sessionMB.onNodeSelect}" />
+                            <p:ajax partialSubmit="true" global="false" update="tree" event="unselect" listener="#{sessionMB.onNodeUnSelect}" />
+                            <p:treeNode icon="globalTout" type="Tout">
+                                <h:outputText value="#{age.raisonsociale}"/>
+                            </p:treeNode>
+                            <p:treeNode icon="arborecense" type="Siege">
+                                <h:outputText value="#{age.raisonsociale}"/>
+                            </p:treeNode>
+                            <p:treeNode icon="entreprise" type="Bureau">
+                                <h:outputText value="#{age.raisonsociale}"/>
+                            </p:treeNode>
+                        </p:tree>
+                    </p:overlayPanel>
+                </div>
+            </h:form>
+
+            <div id="contentModule">
+                <ui:insert name="content">
+                    <div align="center" class="ui-fluid ui-g ui-g-nopad">
+                        <div style="margin-top: 22vh; margin-bottom: 23vh;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                                <p:panel style="width: 275px; height: #{600 > sessionMB.routine.screenH ? 210 : ((sessionMB.routine.screenH - 132) / 2)}px;" id="article">
+                                    <f:facet name="header">
+                                        <h:outputText style="color: white;" value="#{lv.Total} (#{lv.Article})"/>
+                                    </f:facet>
+                                    <h:panelGrid style="margin: auto; text-align: center;">
+                                        <h:graphicImage height="50" value="resources/tool_images/open-box.png" alt="#{lv.Total} (#{lv.Article})"/>
+                                        <h:outputText style="font-size: 7vh; font-weight: bold; color: violet;" value="#{analysePrixMB.article}" />
+                                        <p:commandLink style="font-size: 12pt;" value="#{lv.Suivre}" rendered="#{sessionMB.articl}" immediate="true" action="article.xhtml?faces-redirect=true"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                                <p:panel style="width: 275px; height: #{600 > sessionMB.routine.screenH ? 210 : ((sessionMB.routine.screenH - 132) / 2)}px;" id="used">
+                                    <f:facet name="header">
+                                        <h:outputText style="color: white;" value="#{lv.Total} (#{lv.Concurrent})"/>
+                                    </f:facet>
+                                    <h:panelGrid style="margin: auto; text-align: center;">
+                                        <h:graphicImage height="50" value="resources/tool_images/reseller.png" alt="#{lv.Total} (#{lv.Concurrent})"/>
+                                        <h:outputText style="font-size: 7vh; font-weight: bold; color: violet;" value="#{analysePrixMB.cptoir}" />
+                                        <p:commandLink style="font-size: 12pt;" value="#{lv.Suivre}" rendered="#{sessionMB.cptoir}" immediate="true" action="concurrent.xhtml?faces-redirect=true"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                                <p:panel style="width: 275px; height: #{600 > sessionMB.routine.screenH ? 210 : ((sessionMB.routine.screenH - 132) / 2)}px;" id="expiry">
+                                    <f:facet name="header">
+                                        <h:outputText style="color: white;" value="#{lv.Total} (#{lv.Notification}s)"/>
+                                    </f:facet>
+                                    <h:panelGrid style="margin: auto; text-align: center;">
+                                        <h:graphicImage height="50" value="resources/tool_images/expired.png" alt="#{lv.Total} (#{lv.Notification}s)"/>
+                                        <h:outputText style="font-size: 7vh; font-weight: bold; color: violet;" value="#{analysePrixMB.expiry}" />
+                                        <p:commandLink style="font-size: 12pt;" value="#{lv.Suivre}" rendered="#{sessionMB.no_sms}" immediate="true" action="notifications.xhtml?faces-redirect=true"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </div>
+                        </div>
+                    </div>
+                </ui:insert>
+            </div>
+
+            <div style="background: yellowgreen;" id="bottom">
+                <center>
+                    <h:outputText style="color: white; font-weight: bold;" value="Copyright &copy;2024" />
+                </center>
+            </div>
+
+
+            <h:form id="forms">
+                <!-- ****************************************Modifier profil************************************************************************************************************************************************************************************************************** -->
+                <p:dialog responsive="true" modal="true" positionType="absolute" id="idFormDialog" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="compte" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 11pt;" value="#{lv.Profil}" />
+                    </f:facet>
+
+                    <div jsf:id="form_profil" style="text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                        <h:panelGrid style="text-align: justify;">
+                            <p:outputLabel style="" value="#{lv.Login}:" for="login" />
+                            <p:inputText style="font-size: 10pt; font-weight: normal;" id="login" size="25" value="#{sessionMB.currentUser.login}" title="#{lv.Login}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Ancien} #{lv.Mdp}:" for="mdp_old" />
+                            <p:password style="font-size: 10pt; font-weight: normal;" id="mdp_old" size="25" value="#{sessionMB.oldPassTyped}" title="#{lv.Ancien} #{lv.Mdp}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Mdp}:" for="mdp" />
+                            <p:password match="cfm_mdp" style="font-size: 10pt; font-weight: normal;" id="mdp" size="25" value="#{sessionMB.currentUser.mdp}" title="#{lv.Mdp} (#{lv.Format_invalide_mdp})" promptLabel="#{lv.Prompt_mdp}" weakLabel="#{lv.Faible}" goodLabel="#{lv.Bon}" strongLabel="#{lv.Robuste}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <f:validateLength minimum="6" maximum="21" for="mdp"/>
+                                <!--<f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{6,21})"/>-->
+                            </p:password>
+                            <p:message for="mdp"/>
+
+                            <p:outputLabel style="" value="#{lv.Confirmer} #{lv.Mdp}:" for="cfm_mdp" />
+                            <p:password style="font-size: 10pt; font-weight: normal;" id="cfm_mdp" size="25" value="#{sessionMB.currentUser.cfm_mdp}" title="#{lv.Confirmer} #{lv.Mdp} (#{lv.Format_invalide_mdp})" promptLabel="#{lv.Prompt_mdp}" weakLabel="#{lv.Faible}" goodLabel="#{lv.Bon}" strongLabel="#{lv.Robuste}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <f:validateLength minimum="6" maximum="21" for="cfm_mdp"/>
+                                <!--<f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{6,21})"/>-->
+                            </p:password>
+                            <p:message for="cfm_mdp"/>
+
+                            <h:panelGrid columns="2" style="text-align: justify;">
+                                <p:outputLabel style="" value="#{lv.Photo}:" for="photo" />
+                                <p:commandLink actionListener="#{sessionMB.prepareCapture}" id="picture" rendered="#{compteMB.egc}" style="text-decoration: none; background-color: transparent;" immediate="true" oncomplete="PF('widget_cameraphoto').show()">
+                                    <p:graphicImage height="30" url="resources/tool_images/cameraPhoto.png" title="#{lv.Camera}" />
+                                </p:commandLink>
+                            </h:panelGrid>
+                            <h:panelGroup>
+                                <p:fileUpload accept=".svg,.gif,.jpeg,.jpg,.png" auto="true" update="appercu" fileUploadListener="#{sessionMB.handleFileUpload}" style="font-size: 10pt; font-weight: bold;" id="photo" allowTypes="/(\.|\/)(svg|gif|jpe?g|png)$/" label="#{lv.Choisir}" sizeLimit="700000" previewWidth="25" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                <p:graphicImage id="appercu" height="50" url="#{sessionMB.currentUser.photoRelatif}" />
+                                <p:message for="photo"/>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+
+                    <p:separator/>
+
+                    <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                        <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('compte').hide()" />
+                        <p:commandButton process="idFormDialog" actionListener="#{sessionMB.updateProfile()}" partialSubmit="true" icon="okIcon" style="font-size: 10pt; font-weight: bold;" value="#{lv.Enregistrer}" update="form_profil,form_info_p,menu_form"/>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <p:dialog responsive="true" id="dialog_cameraphoto" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="widget_cameraphoto" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 11pt;" value="#{lv.Ajouter} #{lv.Unec} #{lv.Photo}" />
+                    </f:facet>
+
+                    <p:photoCam width="270" height="190" format="png" widgetVar="pc" listener="#{sessionMB.onCapture}" />
+
+                    <p:separator/>
+
+                    <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                        <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('widget_cameraphoto').hide()" />
+                        <p:commandButton process="dialog_cameraphoto" onclick="PF('pc').capture()" icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Capture}" partialSubmit="true" update=":forms:pan_photocopper"/>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <p:dialog responsive="true" id="dialog_photocopper" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="widget_photocopper" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 11pt;" value="#{lv.Cadrage}" />
+                    </f:facet>
+
+                    <p:imageCropper id="pan_photocopper" minSize="50,50" value="#{sessionMB.croppedImage}" image="/#{sessionMB.imageTempRelatif}" />
+
+                    <p:separator/>
+
+                    <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                        <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" actionListener="#{sessionMB.deleteTempImage()}" immediate="true" oncomplete="PF('widget_photocopper').hide()" />
+                        <p:commandButton process="dialog_photocopper" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Valider}" partialSubmit="true" actionListener="#{sessionMB.crop}" update="forms:photo,forms:appercu,pan_photocopper"/>
+                    </h:panelGrid>
+                    <p:messages />
+                </p:dialog>
+                <!-- ****************************************Modifier profil************************************************************************************************************************************************************************************************************** -->
+
+                <!-- ****************************************Pause************************************************************************************************************************************************************************************************************** -->
+                <p:dialog responsive="true" visible="#{sessionMB.pause}" modal="true" positionType="absolute" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="pause" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 13px;" value="#{lv.Pause}" />
+                    </f:facet>
+
+                    <div jsf:id="form_pause" style="text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                        <h:panelGrid id="mdp_g_p" style="text-align: justify; text-align: center;">
+                            <h:graphicImage  value="resources/tool_images/pause.png" style="cursor:pointer" />
+                            <p:outputLabel value="#{lv.Mdp}:" for="mdp_p" />
+                            <p:inputText autocomplete="false" style="font-size: 10pt; width: calc(95%); font-weight: normal;" type="password" id="mdp_p" value="#{sessionMB.currentUser.mdp}" title="#{lv.Mdp}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <p:ajax partialSubmit="true" event="keyup" />
+                            </p:inputText>
+                        </h:panelGrid>
+                    </div>
+
+                    <p:separator/>
+
+                    <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                        <p:commandButton immediate="true" icon="cancelIcon" style="font-size: 10pt; font-weight: bold;" value="#{lv.Quitter}" action="#{sessionMB.disconnection()}"/>
+                        <p:commandButton id="ok_pause" icon="okIcon" style="font-size: 10pt; font-weight: bold;" action="#{sessionMB.stopBreak()}" value="Ok" update="mdp_g_p,form_info_p"/>
+                    </h:panelGrid>
+                    <p:defaultCommand scope="form_pause" target="ok_pause" />
+                </p:dialog>
+                <!-- ****************************************Pause************************************************************************************************************************************************************************************************************** -->
+
+                <!-- ****************************************Calculatrice************************************************************************************************************************************************************************************************************** -->
+                <p:dialog responsive="true" style="font-size: 11pt; font-weight: bold;" showEffect="slide" hideEffect="slide" showHeader="true" dynamic="true" resizable="false" widgetVar="calculator" modal="true" closable="true" closeOnEscape="true" >
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 11pt; font-weight: bold;" value="#{lv.Calculatrice}" />
+                    </f:facet>
+                    <h:panelGrid>
+                        <h:inputText readonly="true" style="font-size: 14pt; font-weight: bold; width: 236px; height: 30px; color : blue;" id="ecran" value="#{calculatriceMB.view}" title="#{lv.Valeur}"/>
+                    </h:panelGrid>
+                    <h:panelGrid>
+                        <h:panelGroup>
+                            <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px; color: green;" immediate="true" actionListener="#{calculatriceMB.readReset()}" update="ecran"  value=" C " />
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2">
+                        <h:panelGroup>
+                            <h:panelGrid columns="3">
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read1()}" update="ecran"  value=" 1 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read2()}" update="ecran"  value=" 2 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read3()}" update="ecran"  value=" 3 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read4()}" update="ecran"  value=" 4 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read5()}" update="ecran"  value=" 5 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read6()}" update="ecran"  value=" 6 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read7()}" update="ecran"  value=" 7 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read8()}" update="ecran"  value=" 8 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read9()}" update="ecran"  value=" 9 " />
+                            </h:panelGrid>
+                            <h:panelGrid columns="2">
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.read0()}" update="ecran"  value=" 0 " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px;" immediate="true" actionListener="#{calculatriceMB.readComa()}" update="ecran"  value=" . " />
+                            </h:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:panelGrid columns="2">
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px; color: purple;" immediate="true" actionListener="#{calculatriceMB.readAdd()}" update="ecran"  value=" + " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px; color: purple;" immediate="true" actionListener="#{calculatriceMB.readSubstract()}" update="ecran"  value=" - " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px; color: purple;" immediate="true" actionListener="#{calculatriceMB.readDivide()}" update="ecran"  value=" / " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px; color: purple;" immediate="true" actionListener="#{calculatriceMB.readModulo()}" update="ecran"  value=" % " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px; color: purple;" immediate="true" actionListener="#{calculatriceMB.readMultiply()}" update="ecran"  value=" x " />
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 42px; color: purple;" immediate="true" actionListener="#{calculatriceMB.readExpo()}" update="ecran"  value=" P " />
+                            </h:panelGrid>
+                            <h:panelGrid>
+                                <p:commandButton style="font-size: 11pt; font-weight: bold; width: 90px; color: blue;" immediate="true" actionListener="#{calculatriceMB.readEqual()}" update="ecran"  value=" = " />
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:dialog>
+                <!-- ****************************************Calculatrice************************************************************************************************************************************************************************************************************** -->
+
+                <!-- ****************************************Déconnexion************************************************************************************************************************************************************************************************************** -->
+                <p:dialog responsive="true" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="decon" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 10pt;" value="#{lv.Confirmation}" />
+                    </f:facet>
+
+                    <h:panelGrid style="margin: auto; text-align: center;">
+                        <p:graphicImage alt="Oups!" url="resources/tool_images/question.png" />
+                        <h:outputText value="#{lv.Question_onfirmer}" />
+                    </h:panelGrid>
+
+                    <p:separator/>
+
+                    <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                        <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('decon').hide()" />
+                        <p:commandButton immediate="true" icon="okIcon" style="font-size: 10pt; font-weight: bold;" value="Ok" action="#{sessionMB.disconnection()}"/>
+                    </h:panelGrid>
+                </p:dialog>
+                <!-- ****************************************Déconnexion************************************************************************************************************************************************************************************************************** -->
+                <p:ajaxStatus onstart="busyness('begin')" oncomplete="busyness('complete')"/>
+            </h:form>
+
+            <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+            <h:form id="form_info_p">
+                <p:poll autoStart="#{sessionMB.routine.vanish}" immediate="true" interval="3" listener="#{sessionMB.routine.stopInfo()}" update="form_info_p" widgetVar="pooler" />
+                <p:dialog responsive="true" width="280" onShow="PF('compte').hide()" visible="#{sessionMB.routine.showInfo}" modal="true" showHeader="true" resizable="true" closable="true" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 10pt;" value="#{sessionMB.routine.titleMessage} : #{sessionMB.routine.contexteMessage}" />
+                    </f:facet>
+
+                    <h:panelGrid style="margin: auto;" columns="3">
+                        <p:graphicImage alt="Oups!" url="#{sessionMB.routine.iconMessage}" />
+                        <h:outputText style="#{(sessionMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (sessionMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{sessionMB.routine.message}" />
+                    </h:panelGrid>
+
+                    <p:separator/>
+
+                    <h:panelGrid style="text-align: center; margin: auto;">
+                        <p:commandButton id="ok_info" icon="seenIcon" style="font-size: 10pt; font-weight: bold;" value="Ok" immediate="true" actionListener="#{sessionMB.routine.stopInfo()}" oncomplete="PF('info').hide()" />
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+            <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        </f:view>
+    </h:body>
+</html>

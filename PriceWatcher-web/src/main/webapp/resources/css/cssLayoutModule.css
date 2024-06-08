@@ -1,0 +1,441 @@
+html, body {
+    margin:0;
+    padding:0;
+}
+
+.ui-menubutton .ui-button {
+    margin: 0;
+    font-size: 9pt !important;
+    width: 100px !important;
+}
+
+.short-combo{
+    min-width: 85px !important;
+}
+
+.short-combo2{
+    min-width: 125px !important;
+}
+
+body .ui-datepicker table{
+    background: lightblue !important;
+    color: white !important;
+}
+
+.jqplot-target{
+    font-size: 7pt;
+    font-weight: bold;
+}
+
+input, textarea, .ui-corner-all, ui.selectonemenu, .ui-datatable-reflow .ui-reflow-dropdown, .ui-corner-bottom, .ui-corner-top{
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+legend.ui-fieldset-legend.ui-corner-all.ui-state-default{
+    padding: 1px !important;
+    font-size: 12pt !important;
+}
+
+.ui-dashboard-column{
+    padding-bottom: 0px;
+    margin: auto;
+}
+
+.ui-datatable{
+    font-size: 11pt;
+}
+
+.ui-datatable table {
+    table-layout: auto !important;
+}
+
+.ui-datatable-scrollable-theadclone {
+    visibility: hidden;
+}
+
+.ui-datatable-scrollable-body{
+    overflow-x: hidden !important;
+}
+
+.ui-datatable-scrollable-small{
+    width: 300px !important;
+}
+
+.ui-overlaypanel-content{
+    padding: 0px;
+    border-style: none;
+}
+
+.ui-datatable-reflow .ui-reflow-label{
+    color: gray;
+}
+
+thead{
+    background: #99eeff !important;
+}
+
+td{
+    padding: 3px;
+}
+
+body .ui-dialog.ui-widget-content .ui-dialog-titlebar, body .ui-dialog .ui-dialog-titlebar {
+    background: #99eeff !important;
+}
+
+body .ui-dialog.ui-widget-content {
+    padding: 0px !important;
+}
+
+.ui-menu.ui-megamenu .ui-menu-child .ui-menu-list{
+    width: 250px !important;
+    border-radius: 0px;
+    background: transparent;
+}
+
+.ui-panel-titlebar, .ui-carousel-header, .ui-fieldset .ui-fieldset-legend, .ui-steps-item, .ui-menu .ui-menu-list .ui-widget-header, .ui-datatable-header, .ui-datatable-footer, .ui-dialog-titlebar{
+    background: #0d52ce !important;
+    color: white !important;
+    font-weight: bold;
+    text-shadow: none;
+    border-radius: 0px;
+}
+
+.ui-menu .ui-menu-parent .ui-menu-child{
+    width: 250px;
+    border-radius: 0px;
+}
+.ui-menu.ui-menu-dynamic{
+    width: 200px;
+    border-radius: 0px;
+}
+
+.ui-clock{
+    background: linear-gradient(skyblue, white);
+    color: #036fab;
+    text-shadow: none;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+#top {
+    position: relative;
+    /*background: linear-gradient(#036fab, skyblue);*/
+    color: white;
+    padding: 5px;
+    margin: 0px 0px 1px 0px;
+    /*border-radius: 10px 10px 0px 0px;*/
+}
+
+#bottom {
+    position: relative;
+    /*background: linear-gradient(#036fab, skyblue);*/
+    padding: 5px;
+    margin: 1px 0px 0px 0px;
+    /*border-radius: 0px 0px 10px 10px;*/
+}
+
+#contentModule {
+    position: static;
+    background-color: white;
+    border-style: solid;
+    border-color: lightgray;
+    border-width: 1px;
+    margin: auto;
+}
+
+#top a:link, #top a:visited {
+    color: white;
+    font-weight : bold;
+    text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+    color: black;
+    font-weight : bold;
+    text-decoration : underline;
+}
+
+.whiteClass{
+    color: white;
+    background-color: cornflowerblue;
+}
+
+.rowStyle:hover{
+    background-color: #bfe1f7 !important;
+}
+
+.ui-state-highlight{
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.turn_on{
+    background-image: url("../icon_images/on.png") !important;
+}
+
+.securite{
+    background-image: url("../icon_images/act_des.png") !important;
+}
+
+.okIcon{
+    background-image: url("../icon_images/ok.png") !important;
+}
+
+.okCalco{
+    background-image: url("../icon_images/calco.png") !important;
+}
+
+.okPause{
+    background-image: url("../icon_images/break.png") !important;
+}
+
+.okRetour{
+    background-image: url("../icon_images/precedent.png") !important;
+}
+
+.okDeconnexion{
+    background-image: url("../icon_images/logout.png") !important;
+}
+
+.cancelIcon{
+    background-image: url("../icon_images/supprimer_tab.png") !important;
+}
+
+.seenIcon{
+    background-image: url("../icon_images/eye.png") !important;
+}
+
+.stat{
+    background-image: url("../icon_images/stat.png") !important;
+}
+
+.raf{
+    background-image: url("../icon_images/loop.png") !important;
+}
+
+.add{
+    background-image: url("../icon_images/add.png") !important;
+}
+
+.add2{
+    background-image: url("../icon_images/add2.png") !important;
+}
+
+.bd{
+    background-image: url("../icon_images/bd.png") !important;
+}
+
+.excel{
+    background-image: url("../icon_images/excel.png") !important;
+}
+
+.word{
+    background-image: url("../icon_images/word.png") !important;
+}
+
+.pdf{
+    background-image: url("../icon_images/pdf.png") !important;
+}
+
+.mod{
+    background-image: url("../icon_images/modifier_tab.png") !important;
+}
+
+.con{
+    background-image: url("../icon_images/list.png") !important;
+}
+
+.imp{
+    background-image: url("../icon_images/print2.png") !important;
+}
+
+.sup{
+    background-image: url("../icon_images/red_cross.png") !important;
+}
+
+.sup_small{
+    background-image: url("../icon_images/logout.png") !important;
+}
+
+.cop{
+    background-image: url("../icon_images/copy2.png") !important;
+}
+
+.bag{
+    background-image: url("../icon_images/home.png") !important;
+}
+
+.module{
+    background-image: url("../icon_images/bloc.png") !important;
+}
+
+.det{
+    background-image: url("../icon_images/delete.png") !important;
+}
+
+.cor{
+    background-image: url("../icon_images/corbeil.png") !important;
+}
+
+.res{
+    background-image: url("../icon_images/add2.png") !important;
+}
+
+.menu{
+    background-image: url("../icon_images/menus.png") !important;
+}
+
+.sous_menu{
+    background-image: url("../icon_images/folder.png") !important;
+}
+
+.fenetre{
+    background-image: url("../icon_images/pages.png") !important;
+}
+
+.bouton{
+    background-image: url("../icon_images/fond.png") !important;
+}
+
+.fichier{
+    background-image: url("../icon_images/list.png") !important;
+}
+
+.traitement{
+    background-image: url("../icon_images/signPetit.png") !important;
+}
+
+.analyse{
+    background-image: url("../icon_images/stat.png") !important;
+}
+
+.plus{
+    background-image: url("../icon_images/add.png") !important;
+}
+
+.siteWeb{
+    background-image: url("../icon_images/globe.png") !important;
+}
+
+.actualise{
+    background-image: url("../icon_images/actualise.png") !important;
+}
+
+.profil{
+    background-image: url("../icon_images/student.png") !important;
+}
+
+.anglais{
+    background-image: url("../icon_images/flaganglais.png") !important;
+}
+
+.francais{
+    background-image: url("../icon_images/flagfrance.png") !important;
+}
+
+.help{
+    background-image: url("../icon_images/help.png") !important;
+}
+
+.lien{
+    background-image: url("../icon_images/link.png") !important;
+}
+
+.global{
+    background-image: url("../icon_images/arborescence.png") !important;
+}
+
+.globalTout{
+    background-image: url("../icon_images/organise.png") !important;
+}
+
+.entreprise{
+    background-image: url("../icon_images/home.png") !important;
+}
+
+.clock{
+    background-image: url("../icon_images/clock.png") !important;
+}
+
+.notes{
+    background-image: url("../icon_images/compose.png") !important;
+}
+
+.stop{
+    background-image: url("../icon_images/stop.png") !important;
+}
+
+.user{
+    background-image: url("../icon_images/user.png") !important;
+}
+
+.msg{
+    background-image: url("../icon_images/msg.png") !important;
+}
+
+.left{
+    background-image: url("../icon_images/left.gif") !important;
+}
+
+.right{
+    background-image: url("../icon_images/right.gif") !important;
+}
+
+.sms{
+    background-image: url("../icon_images/secured-letter.png") !important;
+}
+
+.avertis{
+    background-image: url("../icon_images/avertis.png") !important;
+}
+
+.alert{
+    background-image: url("../icon_images/cloche_avert.png") !important;
+}
+
+.envoyer{
+    background-image: url("../icon_images/sent.png") !important;
+}
+
+.arborecense{
+    background-image: url("../icon_images/arborescence.png") !important;
+}
+
+.upgrade{
+    background-image: url("../icon_images/up.gif") !important;
+}
+
+.bump{
+    background-image: url("../icon_images/bump.png") !important;
+}
+
+.config{
+    background-image: url("../icon_images/conf.png") !important;
+}
+
+.mo_pay{
+    background-image: url("../icon_images/mobile-payment.png") !important;
+}
+
+.barcode_scn{
+    background-image: url("../icon_images/barcode-scanner.png") !important;
+}
+
+.editTable{
+    width: 945px !important;
+}
+
+.incell_datatable{
+    font-size: 10pt;
+    font-weight: bold;
+    width: 150px  !important;
+}
+
+.ui-fileupload{
+    width: 235px;
+}
+
+.ui-fileupload-files td{
+    display: none;
+}

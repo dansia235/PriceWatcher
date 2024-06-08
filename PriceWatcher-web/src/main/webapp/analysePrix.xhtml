@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./moduleVeille.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="content">
+        <style id="tableStyle">
+            .ui-columntoggler{
+                width: 150px;
+                height: 160px !important;
+            }
+        </style>
+        <h:form id="dForm">
+
+            <div jsf:id="btn_rch" style="padding-bottom: 2px; text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="" value="#{lv.Filtre}" />
+                            <p:selectOneMenu style="width: 145px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{analysePrixMB.selectedCritere.attribut}">
+                                <f:selectItems value="#{analysePrixMB.listCritereFiltre}" var="critere" itemLabel="#{critere.libelle}" itemValue="#{critere.attribut}" />
+                                <p:ajax event="change" listener="#{analysePrixMB.selectCritere()}" update="btn_rch" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{analysePrixMB.selectedCritere.type.equals('String') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:inputText value="#{analysePrixMB.selectedCritere.valString}" size="21" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{analysePrixMB.selectedCritere.type.equals('Boolean') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectBooleanCheckbox value="#{analysePrixMB.selectedCritere.valBool}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{analysePrixMB.selectedCritere.type.equals('Select') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectOneMenu style="width: 145px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{analysePrixMB.selectedCritere.valSelect}">
+                                <f:selectItems value="" var="item" itemLabel="" itemValue="" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{analysePrixMB.selectedCritere.type.equals('Numeric') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Min}" />
+                                <p:spinner value="#{analysePrixMB.selectedCritere.valNum1}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Max}" />
+                                <p:spinner value="#{analysePrixMB.selectedCritere.valNum2}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <div style="display: #{analysePrixMB.selectedCritere.type.equals('Date') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Debut}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{analysePrixMB.selectedCritere.valDate1}" size="14" showOn="button" title="#{lv.Debut}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Fin}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{analysePrixMB.selectedCritere.valDate2}" size="14" showOn="button" title="#{lv.Fin}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-2 ui-md-2 ui-sm-12 ui-g-nopad">
+                    <p:commandButton disabled="#{!analysePrixMB.routine.raf}" icon="raf" style="font-size: 9pt; font-weight: bold; margin-top: 20px;" actionListener="#{analysePrixMB.rechercheVeilleconcurrent()}" update="btn_rch,grille,btn_cmd,@form" value="#{lv.Rechercher}" />
+                </div>
+            </div>
+
+            <p:dataTable expandableRowGroups="true" sortBy="#{item.veilleconcurrentPK.idarticle}" disabledTextSelection="false" reflow="true" id="grille" scrollHeight="#{(600 > sessionMB.routine.screenH) ? '' : (sessionMB.routine.screenH - 367)}" rows="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 399)/25)}" lazy="true" rowsPerPageTemplate="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 399)/25).intValue()},100,1000,2000" scrollable="true" rowStyleClass="rowStyle" sortMode="multiple" disabledSelection="true" selectionMode="multiple" rowKey="#{item.veilleconcurrentPK.idarticle}" emptyMessage="#{lv.Grille_vide}" paginator="true" paginatorPosition="bottom" value="#{analysePrixMB.lazylistVeilleconcurrentModel}" var="item">
+                <f:facet name="header">
+                    <h:outputText style=" color: #{!analysePrixMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Liste} #{lv.Des} #{lv.Article}s (#{lv.Analyse} #{lv.Des} #{lv.Prix})" />
+                </f:facet>
+
+                <p:headerRow>
+                    <p:column colspan="3">
+                        <div class="inline-flex align-items-center" style="vertical-align: middle">
+                            <h:graphicImage width="75" url="#{item.article.photoRelatif}" style="vertical-align: middle" />
+                            <p:spacer width="15" />
+                            <h:outputText styleClass="ml-2" value="#{item.article.libelle}"/>
+                            <p:spacer width="15" />
+                            <h:outputText styleClass="ml-2" style="color: green;" value="(XAF" />
+                            <p:spacer width="15" />
+                            <h:outputText styleClass="ml-2" style="color: green;" value="#{item.article.prixunit}">
+                                <f:convertNumber integerOnly="true" />
+                            </h:outputText>
+                            <h:outputText styleClass="ml-2" style="color: green;" value=")" />
+                        </div>
+                    </p:column>
+                </p:headerRow>
+
+                <p:column style="text-align: justify;" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Concurrent}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.concurrent.libelle : item.concurrent.label} #{item.concurrent.defaut ? ('(' += lv.Defaut += ')') : ''}"/>
+                </p:column>
+                <p:column exportable="true" style="text-align: right;" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Prix}"/>
+                    </f:facet>
+                    <h:outputText style="color: purple; font-weight: bold;" value="XAF" />
+                    <p:spacer width="15" />
+                    <h:outputText style="color: purple; font-weight: bold;" value="#{item.prixunit}">
+                        <f:convertNumber integerOnly="true" />
+                    </h:outputText>
+                </p:column>
+                <p:column width="160" style="text-align: center;" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Enregistrement}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateEnregistre}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <f:facet name="footer">
+                    <h:outputText style=" color: #{!analysePrixMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Total} = #{analysePrixMB.listVeilleconcurrent.size()}" />
+                </f:facet>
+            </p:dataTable>
+
+            <div jsf:id="btn_cmd" style="padding-bottom: 2px; text-align: center; margin: auto; padding-top: 4px;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto; text-align: center;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                    <p:commandButton immediate="true" icon="cancelIcon" style="font-size: 9pt; font-weight: bold;" value="#{lv.Fermer}" action="#{analysePrixMB.closePage()}" />
+                </div>
+            </div>
+        </h:form>
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form_info">
+            <p:poll autoStart="#{analysePrixMB.routine.vanish}" immediate="true" interval="3" listener="#{analysePrixMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+            <p:dialog responsive="true" onShow="#{analysePrixMB.routine.vanish ? 'PF(\'widget_operations\').hide()' : ''}" visible="#{analysePrixMB.routine.showInfo}" modal="#{true or !analysePrixMB.routine.vanish}" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{analysePrixMB.routine.titleMessage} : #{analysePrixMB.routine.contexteMessage}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;" >
+                    <p:graphicImage alt="Oups!" url="#{analysePrixMB.routine.iconMessage}" />
+                    <h:outputText style="#{(analysePrixMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (analysePrixMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{analysePrixMB.routine.message}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="text-align: center; margin: auto;">
+                    <p:commandButton icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{analysePrixMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+    </ui:define>
+</ui:composition>
