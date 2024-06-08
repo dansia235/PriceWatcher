@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{sessionMB.locale}" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{sessionMB.swichWelcomePage()}" />
+    </f:metadata>
+
+    <h:head>
+        <meta name="google" content="notranslate" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="PriceWatcher"/>
+        <meta name="keywords" content="PriceWatcher, price, observer, watcher, e-commerce"/>
+        <link rel="icon" href="favicon.png" type="image/png" />
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css"/>
+        <link href="./resources/css/cssLayoutIndex.css" rel="stylesheet" type="text/css"/>
+        <script language="JavaScript" type="text/javascript" src="./resources/javaScript/js.js" /><script language="JavaScript" type="text/javascript" src="./resources/javaScript/webcam.js" />
+        <title>PriceWatcher</title>
+    </h:head>
+
+    <h:body style="margin: 0px;">
+        <f:view locale="#{sessionMB.locale}">
+            <div id="global_div" class="ui-fluid ui-g ui-g-nopad">
+                <div style="height: 100vh; background: linear-gradient(white, yellowgreen, white);" id="top" class="ui-g-12 ui-sm-12">
+                    <div class="ui-g ui-g-nopad">
+                        <div class="ui-g-12 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto; margin-top: 1%;">
+                                <h:outputText style="font-size: 37pt; color: orange; text-shadow: 2px 2px 2px darkgray; font-weight: bold;" value="#{lv.AuPriMo}" />
+                                <h:outputText style="font-size: 17pt; color: green; text-shadow: 2px 2px 2px darkgray; font-weight: bold;" value="#{lv.Forecom}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-g-nopad">
+                        <div class="ui-g-4 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <h:panelGrid columns="2" style="margin-top: 10vh;">
+                                    <h:graphicImage style="cursor: pointer; margin: auto;" value="resources/tool_images/logo.png" alt="PriceWatcher" />
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </div>
+                        <div class="ui-g-8 ui-sm-12 ui-g-nopad">
+                            <div style="margin-top: 35vh;" class="ui-g-12 ui-g-nopad">
+                                <p:panel style="width: 600px; margin: auto; border-radius: 30px 30px 30px 30px !important;">
+                                    <h:form id="link_form">
+                                        <h:panelGrid style="border-style: none !important; border-width: 0px !important; margin: auto;" columns="2">
+                                            <h:panelGrid style="border-style: none !important; border-width: 0px !important; margin: auto;" columns="3">
+                                                <p:commandLink rendered="#{sessionMB.currentUser.connexion == null}" style="font-size: 9pt; color: cornflowerblue;" immediate="true" action="#{sessionMB.prepareConnexion()}">
+                                                    <h:outputText style="font-size: 17pt; font-weight: bold;" value="#{lv.Connexion}" />
+                                                </p:commandLink>
+                                                <p:spacer width="25"/>
+                                                <p:commandLink rendered="#{sessionMB.locale.equals('fr')}" immediate="true" action="#{sessionMB.anglaisNS()}" title="#{lv.Anglais}">
+                                                    <!--<h:outputText style="font-size: 9pt; color: #000033;" value=" EN" />-->
+                                                    <h:graphicImage height="25" value="resources/tool_images/flaganglais.png" alt="#{lv.Anglais}"/>
+                                                </p:commandLink>
+                                                <p:commandLink rendered="#{sessionMB.locale.equals('en')}" immediate="true" action="#{sessionMB.francaisNS()}" title="#{lv.Francais}">
+                                                    <!--<h:outputText style="font-size: 9pt; color: #000033;" value=" FR" />-->
+                                                    <h:graphicImage height="25" value="resources/tool_images/flagfrance.png" alt="#{lv.Francais}"/>
+                                                </p:commandLink>
+                                            </h:panelGrid>
+
+                                            <h:panelGrid style="border-style: none !important; border-width: 0px !important; margin: auto;" columns="6">
+                                                <p:spacer width="25"/>
+                                                <h:outputText rendered="#{sessionMB.currentUser.connexion != null}" style="text-decoration: none; background-color: transparent; color: green; font-weight: bold; text-shadow: 1px 1px 1px white; font-size: 17pt;" value="Hello #{sessionMB.currentUser.login} !" />
+                                                <p:spacer width="25"/>
+                                                <p:commandLink onstart="getScreenDimensions()" style="background-color: transparent; color: #036fab; text-shadow: 1px 1px 1px white; font-size: 17pt;" rendered="#{sessionMB.currentUser.connexion != null}" immediate="true" action="#{sessionMB.prepareConnexion()}">
+                                                    <h:outputText value="#{lv.Administration}" />
+                                                </p:commandLink>
+                                                <p:spacer width="25"/>
+                                                <p:commandLink style="background-color: transparent; color: grey; text-shadow: 1px 1px 1px white; font-size: 17pt;" rendered="#{sessionMB.currentUser.connexion != null}" immediate="true" action="#{sessionMB.disconnection()}">
+                                                    <h:outputText value="#{lv.Deconnexion}" />
+                                                </p:commandLink>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </h:form>
+                                </p:panel>
+                                <p:spacer height="25"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+            <h:form id="form_info">
+                <p:poll autoStart="#{sessionMB.routine.vanish}" immediate="true" interval="3" listener="#{sessionMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+                <p:dialog responsive="true" onShow="PF('compte').hide()" visible="#{sessionMB.routine.showInfo}" modal="true" showHeader="true" resizable="true" closable="true" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 10pt;" value="#{sessionMB.routine.titleMessage} : #{sessionMB.routine.contexteMessage}" />
+                    </f:facet>
+
+                    <h:panelGrid style="margin: auto; text-align: center;">
+                        <p:graphicImage alt="Oups!" url="#{sessionMB.routine.iconMessage}" />
+                        <h:outputText style="#{(sessionMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (sessionMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{sessionMB.routine.message}" />
+                    </h:panelGrid>
+
+                    <p:separator/>
+
+                    <h:panelGrid style="text-align: center; margin: auto;">
+                        <p:commandButton partialSubmit="true" id="ok_info" icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{sessionMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+            <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+
+            <p:ajaxStatus onstart="busyness('begin')" oncomplete="busyness('complete')"/>
+        </f:view>
+    </h:body>
+</html>
+

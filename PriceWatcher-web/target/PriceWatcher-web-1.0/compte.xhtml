@@ -1,0 +1,430 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./moduleSecurite.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="content">
+        <style id="tableStyle">
+            .ui-columntoggler{
+                width: 150px;
+                height: 210px !important;
+            }
+        </style>
+        <h:form id="dForm">
+
+            <div jsf:id="btn_rch" style="padding-bottom: 2px; text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-2 ui-md-2 ui-sm-12 ui-g-nopad">
+                    <h:panelGrid style="margin: auto;">
+                        <p:outputLabel style="" value="#{lv.Filtre}" />
+                        <p:selectOneMenu style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{compteMB.selectedCritere.attribut}">
+                            <f:selectItems value="#{compteMB.listCritereFiltre}" var="critere" itemLabel="#{critere.libelle}" itemValue="#{critere.attribut}" />
+                            <p:ajax event="change" listener="#{compteMB.selectCritere()}" update="btn_rch" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{(compteMB.selectedCritere.type.equals('String') or compteMB.selectedCritere.type.equals('StringLogin') or compteMB.selectedCritere.type.equals('StringNom') or compteMB.selectedCritere.type.equals('StringPrenom')) ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:inputText value="#{compteMB.selectedCritere.valString}" size="25" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{compteMB.selectedCritere.type.equals('Boolean') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectBooleanCheckbox value="#{compteMB.selectedCritere.valBool}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{compteMB.selectedCritere.type.equals('Select') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectOneMenu style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{compteMB.selectedCritere.valSelect}">
+                                <f:selectItems value="#{compteMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}" />
+                                <p:ajax event="change" partialSubmit="true" update="btn_rch" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{compteMB.selectedCritere.type.equals('Select2') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectOneMenu disabled="#{!compteMB.selectedCritere.type.equals('Select2')}" style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{compteMB.selectedCritere.valString}">
+                                <f:selectItem itemLabel="#{lv.Feminin}" itemValue="Féminin / Female" />
+                                <f:selectItem itemLabel="#{lv.Masculin}" itemValue="Masculin / Male" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{compteMB.selectedCritere.type.equals('Select7') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectOneMenu disabled="#{!compteMB.selectedCritere.type.equals('Select7')}" style="width: 150px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{compteMB.selectedCritere.valString}">
+                                <f:selectItem itemLabel="#{lv.Oui}" itemValue="true" />
+                                <f:selectItem itemLabel="#{lv.Non}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{compteMB.selectedCritere.type.equals('Numeric') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Min}" />
+                                <p:spinner value="#{compteMB.selectedCritere.valNum1}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Max}" />
+                                <p:spinner value="#{compteMB.selectedCritere.valNum2}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <div style="display: #{compteMB.selectedCritere.type.equals('Date') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Debut}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{compteMB.selectedCritere.valDate1}" size="14" showOn="button" title="#{lv.Debut}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Fin}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{compteMB.selectedCritere.valDate2}" size="14" showOn="button" title="#{lv.Fin}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <p:commandButton disabled="#{!compteMB.routine.raf}" icon="raf" style="font-size: 9pt; font-weight: bold; margin-top: 20px;" actionListener="#{compteMB.rechercheCompte()}" update="grille,btn_cmd,btn_rch" value="#{lv.Rechercher}" />
+                </div>
+            </div>
+
+            <p:dataTable disabledTextSelection="false" reflow="true" id="grille" scrollHeight="#{(600 > sessionMB.routine.screenH) ? '' : (sessionMB.routine.screenH - 373)}" rows="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25)}" lazy="true" rowsPerPageTemplate="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 373)/25).intValue()},100,1000,2000" scrollable="true" rowStyleClass="rowStyle" sortMode="multiple" selectionMode="multiple" selection="#{compteMB.selectedListCompte}" rowKey="#{item.idCompte}" emptyMessage="#{lv.Grille_vide}" paginator="true" paginatorPosition="bottom" var="item" value="#{compteMB.lazylistCompteModel}">
+                <f:facet name="header">
+                    <h:outputText style=" color: #{!compteMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Liste} #{lv.Des} #{lv.Compte}s#{!compteMB.selectedCritere.etat.equals('Actif') ? ' (' += lv.Corbeille += ')' : ''}" />
+                    <!--<p:commandButton id="toggler" type="button" value="#{lv.Colonne}" style="float: right; font-size: 7pt; color: blue;" icon="ui-icon-calculator" />
+                    <p:columnToggler datasource="grille" trigger="toggler" />-->
+                </f:facet>
+
+                <p:ajax event="rowSelect" listener="#{compteMB.rowClick()}" update=":dForm:btn_cmd" />
+                <p:ajax event="rowUnselect" listener="#{compteMB.rowClick()}" update=":dForm:btn_cmd" />
+
+                <p:column sortBy="#{item.nomPrenom}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Compte}"/>
+                    </f:facet>
+                    <h:outputText title="#{item.login}" value="#{item.nomPrenom}"/>
+                </p:column>
+                <p:column sortBy="#{item.contact}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Contact}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.contact}"/>
+                </p:column>
+                <p:column sortBy="#{item.login}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Login}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.login}"/>
+                </p:column>
+                <p:column width="90" sortBy="#{item.actif}" exportable="true" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Activer}"/>
+                    </f:facet>
+                    <p:selectBooleanCheckbox disabled="#{!sessionMB.ct_mod}" label="#{item.idCompte}" value="#{item.actif}" >
+                        <p:ajax event="change" listener="#{compteMB.activer}" partialSubmit="true" update="grille,form_info" />
+                    </p:selectBooleanCheckbox>
+                </p:column>
+                <p:column width="150" style="text-align: center;" sortBy="#{item.dateEnregistre}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Enregistrement}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateEnregistre}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+                <p:column width="105" sortBy="#{item.connexion}" exportable="true" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Connecte}"/>
+                    </f:facet>
+                    <h:graphicImage rendered="#{item.connexion.equals('true')}" height="20" width="20" url="resources/icon_images/ok.png" />
+                </p:column>
+
+                <f:facet name="footer">
+                    <h:outputText style=" color: #{!compteMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Total} =  #{compteMB.listCompte.size()}" />
+                </f:facet>
+            </p:dataTable>
+
+            <div jsf:id="btn_cmd" style="padding-bottom: 2px; text-align: center; margin: auto; padding-top: 4px;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.ct_det}" disabled="#{!compteMB.routine.det}" widgetVar="det" icon="det" style="font-size: 9pt; font-weight: bold;" value="#{lv.Detruire}" actionListener="#{compteMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.ct_res}" disabled="#{!compteMB.routine.res}" widgetVar="res" icon="res" style="font-size: 9pt; font-weight: bold;" value="#{lv.Restaurer}" actionListener="#{compteMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton widgetVar="cor" icon="cor" disabled="#{!compteMB.routine.cor}" style="font-size: 9pt; font-weight: bold;" value="#{compteMB.selectedCritere.etat == 'Actif' ? lv.Corbeille : lv.Liste}" actionListener="#{compteMB.btnClick}" update=":form,@this,grille,btn_cmd" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 3px auto 3px auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton rendered="#{sessionMB.ct_add}" disabled="#{!compteMB.routine.add}" widgetVar="add" icon="add" style="font-size: 9pt; font-weight: bold;" value="#{lv.Ajouter}" actionListener="#{compteMB.btnClick}" update="grille,btn_cmd,:form" oncomplete="PF('widget_compte').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.ct_cop}" disabled="#{!compteMB.routine.cop}" widgetVar="cop" icon="cop" style="font-size: 9pt; font-weight: bold;" value="#{lv.Copier}" actionListener="#{compteMB.btnClick}" update=":form" oncomplete="PF('widget_compte').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.ct_mod}" disabled="#{!compteMB.routine.mof}" widgetVar="mod" icon="mod" style="font-size: 9pt; font-weight: bold;" value="#{lv.Modifier}" actionListener="#{compteMB.btnClick}" update=":form" oncomplete="PF('widget_compte').show()" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.ct_con}" disabled="#{!compteMB.routine.con}" widgetVar="con" icon="con" style="font-size: 9pt; font-weight: bold;" value="#{lv.Consulter}" actionListener="#{compteMB.btnClick}" update=":form" oncomplete="PF('widget_compte').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.ct_sup}" disabled="#{!compteMB.routine.sup}" widgetVar="sup" icon="sup" style="font-size: 9pt; font-weight: bold;" value="#{lv.Supprimer}" actionListener="#{compteMB.btnClick}" oncomplete="PF('conf_sup').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" ajax="false" action="#{compteMB.imprimer()}" rendered="true" disabled="true" style="font-size: 9pt; font-weight: bold;" widgetVar="imp" icon="imp" value="#{lv.Imprimer}" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+            <p:dialog responsive="true" closeOnEscape="true" modal="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="conf_sup" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{lv.Confirmation}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="resources/tool_images/question.png" />
+                    <h:outputText value="#{lv.Question_onfirmer}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('conf_sup').hide()" />
+                    <p:commandButton icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="Ok" actionListener="#{compteMB.persist()}" update="grille,btn_cmd,form_info" onsuccess="PF('conf_sup').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+        </h:form>
+
+        <!-- ****************************************Editer compte************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form">
+            <p:dialog responsive="true" id="dialog_compte" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" height="#{600 > sessionMB.routine.screenH ? 350 : 540}" widgetVar="widget_compte" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{(compteMB.operation.equals('add') ? lv.Ajouter : (compteMB.operation.equals('cop') ? lv.Copier : (compteMB.operation.equals('mod') ? lv.Modifier : lv.Consulter)))} #{lv.Un} #{lv.Compte}" />
+                    <br/><h:panelGroup>
+                        <p:outputLabel rendered="#{compteMB.operation.equals('mod') or compteMB.operation.equals('con')}" style="color: grey;" value=" [ #{lv.DerniereModif_abrev}: " />
+                        <h:outputText rendered="#{compteMB.operation.equals('mod') or compteMB.operation.equals('con')}" style="color: grey;" value="#{compteMB.selectedCompte.derniereModif}" >
+                            <f:convertDateTime pattern="EEE dd/MMM/yyyy HH:mm" />
+                        </h:outputText>
+                        <p:outputLabel rendered="#{compteMB.operation.equals('mod') or compteMB.operation.equals('con')}" style="color: grey;" value=" ]" />
+                    </h:panelGroup>
+                </f:facet>
+
+                <div jsf:id="pan_compte" style="text-align: center; display: table;" class="ui-g ui-g-nopad">
+                    <p:focus />
+                    <div jsf:id="ifPersonnel" style="text-align: justify; display: table; width: 100%;" class="ui-g ui-g-nopad">
+                        <div style="text-align: justify; margin: auto; width: 160px;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="text-align: justify;">
+                                <p:outputLabel style="" value="#{lv.Agence}:" for="tr_agence" />
+                                <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!compteMB.egc}" style="#{compteMB.style} width: 150px;" autoWidth="false" id="tr_agence" value="#{compteMB.selectedAgence}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                    <f:selectItem itemLabel="" itemValue="" />
+                                    <f:selectItems value="#{compteMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}" />
+                                    <p:ajax event="change" partialSubmit="true" update="pan_compte"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </div>
+                    </div>
+
+                    <p:tabView style="text-align: justify;" id="tabView_user">
+                        <p:tab title="#{lv.Etat_civil}">
+                            <div style="text-align: justify; display: table;" class="ui-g ui-g-nopad">
+                                <div style="text-align: justify; margin: auto; width: 240px;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                                    <h:panelGrid id="etat_civil" style="text-align: justify;">
+                                        <h:panelGrid columns="2" style="text-align: justify;">
+                                            <p:outputLabel style="" value="#{lv.Cni}:" for="tr_cni" />
+                                            <p:commandLink actionListener="#{compteMB.prepareCapture}" id="nic" disabled="true" rendered="#{compteMB.egc}" style="text-decoration: none; background-color: transparent;" immediate="true" oncomplete="PF('widget_cameraphoto').show()">
+                                                <p:graphicImage height="25" url="resources/tool_images/cni.png" title="#{lv.Cni}" />
+                                            </p:commandLink>
+                                        </h:panelGrid>
+                                        <p:inputText disabled="#{!compteMB.egc}" style="#{compteMB.style}" id="tr_cni" value="#{compteMB.selectedCompte.cni}" title="#{lv.Cni}" size="15" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                        <p:outputLabel style="" value="#{lv.Nom}:" for="tr_nom" />
+                                        <p:inputText disabled="#{!compteMB.egc}" style="#{compteMB.style}" id="tr_nom" value="#{compteMB.selectedCompte.nom}" title="#{lv.Nom}" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                        <p:outputLabel style="" value="#{lv.Prenom}:" for="tr_prenom" />
+                                        <p:inputText disabled="#{!compteMB.egc}" style="#{compteMB.style}" id="tr_prenom" value="#{compteMB.selectedCompte.prenom}" title="#{lv.Prenom}" size="25" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                        <h:panelGrid style="text-align: justify;" columns="2">
+                                            <h:panelGrid style="text-align: justify;">
+                                                <p:outputLabel style="" value="#{lv.Date} #{lv.De_p} #{lv.Naissance}:" for="tr_datenaissance" />
+                                                <p:calendar showHour="true" showMinute="true" showTodayButton="true" locale="#{sessionMB.locale}" size="10" navigator="true" pattern="dd/MM/yyyy" showOn="button" disabled="#{!compteMB.egc}" style="#{compteMB.style}" id="tr_datenaissance" value="#{compteMB.selectedCompte.dateNaissance}" title="#{lv.Date} #{lv.De_p} #{lv.Naissance}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                            </h:panelGrid>
+
+                                            <h:panelGrid style="text-align: justify;">
+                                                <p:outputLabel style="" value="#{lv.Vers} ? " />
+                                                <p:selectBooleanCheckbox disabled="#{!compteMB.egc}" value="#{compteMB.selectedCompte.nevers}" />
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                </div>
+                                <div style="text-align: justify; margin: auto; width: 240px;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                                    <h:panelGrid style="text-align: justify;">
+
+                                        <p:outputLabel style="" value="#{lv.Sexe}:" for="tr_sexe" />
+                                        <p:selectOneMenu filter="true" filterMatchMode="contains" disabled="#{!compteMB.egc}" style="#{compteMB.style} width: 100px;" autoWidth="false" id="tr_sexe" value="#{compteMB.selectedCompte.sexe}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                            <f:selectItem itemLabel="" itemValue="" />
+                                            <f:selectItem itemLabel="#{lv.Feminin}" itemValue="Féminin / Female" />
+                                            <f:selectItem itemLabel="#{lv.Masculin}" itemValue="Masculin / Male" />
+                                        </p:selectOneMenu>
+
+                                        <h:panelGrid columns="2" style="text-align: justify;">
+                                            <p:outputLabel style="" value="#{lv.Photo}:" for="tr_photo" />
+                                            <p:commandLink actionListener="#{compteMB.prepareCapture}" id="picture" rendered="#{compteMB.egc}" style="text-decoration: none; background-color: transparent;" immediate="true" oncomplete="PF('widget_cameraphoto').show()">
+                                                <p:graphicImage height="30" url="resources/tool_images/cameraPhoto.png" title="#{lv.Camera}" />
+                                            </p:commandLink>
+                                        </h:panelGrid>
+                                        <h:panelGroup>
+                                            <p:fileUpload accept=".svg,.gif,.jpeg,.jpg,.png" auto="true" update="appercu" fileUploadListener="#{compteMB.handleFileUpload}" disabled="#{!compteMB.egc}" style="#{compteMB.style}" id="tr_photo" allowTypes="/(\.|\/)(svg|gif|jpe?g|png)$/" label="#{lv.Choisir}" sizeLimit="700000" previewWidth="25" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                            <p:lightBox id="appercu">
+                                                <h:outputLink value="#{compteMB.selectedCompte.photoRelatif}" title="#{lv.Apercu}">
+                                                    <p:graphicImage height="35" url="#{compteMB.selectedCompte.photoRelatif}" />
+                                                </h:outputLink>
+                                            </p:lightBox>
+                                            <p:message for="tr_photo"/>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="#{lv.Identification}">
+                            <div style="text-align: justify; display: table;" class="ui-g ui-g-nopad">
+                                <div style="text-align: justify; margin: auto; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                                    <h:panelGrid style="text-align: justify;">
+                                        <h:panelGrid columns="2">
+                                            <h:panelGrid>
+                                                <p:outputLabel style="" value="#{lv.Contact}:" for="tr_contact" />
+                                                <p:inputText disabled="#{!compteMB.egc}" style="#{compteMB.style}" id="tr_contact" value="#{compteMB.selectedCompte.contact}" title="#{lv.Contact}" size="11" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                                    <p:ajax event="change" partialSubmit="true"/>
+                                                </p:inputText>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+
+                                        <p:outputLabel style="" value="#{lv.Email}:" for="tr_email" />
+                                        <p:inputText  disabled="#{!compteMB.egc}" style="#{compteMB.style}" id="tr_email" value="#{compteMB.selectedCompte.email}" title="#{lv.Email}" size="25" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                    </h:panelGrid>
+                                </div>
+                                <div style="text-align: justify; margin: auto; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                                    <p:fieldset id="account" style="font-size: 10pt; font-weight: bold;">
+                                        <f:facet name="legend">
+                                            <h:outputText value="#{lv.Reference}" />
+                                        </f:facet>
+                                        <h:panelGrid style="text-align: justify; padding: 0px !important;">
+                                            <h:panelGrid style="text-align: justify;" columns="2">
+                                                <h:panelGrid style="text-align: justify;" columns="2">
+                                                    <p:outputLabel style="" value="#{lv.Activer}:" for="tr_actif" />
+                                                    <p:selectBooleanCheckbox disabled="#{!compteMB.esc}" id="tr_actif" value="#{compteMB.selectedCompte.actif}" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                                                </h:panelGrid>
+                                                <h:panelGrid style="text-align: justify;" columns="2">
+                                                    <p:outputLabel style="" value="#{lv.Inclure} ? " for="setPwd" />
+                                                    <p:selectBooleanCheckbox id="setPwd" disabled="#{!compteMB.esc}" value="#{compteMB.setPwd}" >
+                                                        <p:ajax event="change" partialSubmit="true" update="tr_login,tr_mdp,confirmPassword" />
+                                                    </p:selectBooleanCheckbox>
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+
+                                            <p:outputLabel style="" value="#{lv.Login}:" for="tr_login" />
+                                            <p:inputText disabled="#{compteMB.esc ? ((compteMB.selectedCompte.login.equals('JASON') or compteMB.selectedCompte.login.equals('jason') or compteMB.selectedCompte.login.equals('Jason') or compteMB.selectedCompte.login.equals('MIT²') or compteMB.selectedCompte.login.equals('mit²') or compteMB.selectedCompte.login.equals('MiT²')) ? true : !compteMB.setPwd) : true}" style="#{compteMB.esc ? 'font-size: 10pt; font-weight: bold;' : compteMB.style}" id="tr_login" value="#{compteMB.selectedCompte.login}" title="#{lv.Login}" size="20" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                                            <p:outputLabel style="" value="#{lv.Mdp}:" for="tr_mdp" />
+                                            <p:password style="#{compteMB.esc ? 'font-size: 10pt; font-weight: bold;' : compteMB.style}" title="#{lv.Mdp}" disabled="#{compteMB.esc ? !compteMB.setPwd : true}" id="tr_mdp" promptLabel="#{lv.Prompt_mdp}" weakLabel="#{lv.Faible}" goodLabel="#{lv.Bon}" strongLabel="#{lv.Robuste}" value="#{compteMB.selectedCompte.mdp}" feedback="true" match="confirmPassword" size="20" required="true" requiredMessage="#{lv.Valeur_obligatoire}" validatorMessage="#{lv.Echec_confirmation}">
+                                                <f:validateLength minimum="6" maximum="21"/>
+                                                <!--<f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{6,21})"/>-->
+                                            </p:password>
+
+                                            <p:outputLabel style="" value="#{lv.Confirmer}:" for="confirmPassword" />
+                                            <p:password style="#{compteMB.esc ? 'font-size: 10pt; font-weight: bold;' : compteMB.style}" title="#{lv.Confirmer} #{lv.Mdp}" disabled="#{compteMB.esc ? !compteMB.setPwd : true}" id="confirmPassword" promptLabel="#{lv.Prompt_mdp}" weakLabel="#{lv.Faible}" goodLabel="#{lv.Bon}" strongLabel="#{lv.Robuste}" value="#{compteMB.selectedCompte.mdp}" feedback="true" size="20" required="true" requiredMessage="#{lv.Valeur_obligatoire}" validatorMessage="#{lv.Echec_confirmation}">
+                                                <f:validateLength minimum="6" maximum="21"/>
+                                                <!--<f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{6,21})"/>-->
+                                            </p:password>
+                                        </h:panelGrid>
+                                    </p:fieldset>
+                                </div>
+                            </div>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="#{compteMB.operation.equals('con') ? 'font-size: 10pt; font-weight: bold;' : 'font-size: 10pt; font-weight: bold; float: left;'}" value="#{compteMB.operation.equals('con') ? lv.Fermer : lv.Annuler}" immediate="true" oncomplete="PF('widget_compte').hide()" />
+                    <p:commandButton process="dialog_compte,:dForm" rendered="#{compteMB.esc}" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Enregistrer}" actionListener="#{compteMB.persist()}" partialSubmit="true" update=":dForm:grille,:dForm:btn_cmd,pan_compte,form_info"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog responsive="true" id="dialog_cameraphoto" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="widget_cameraphoto" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{lv.Ajouter} #{lv.Unec} #{lv.Photo}" />
+                </f:facet>
+
+                <p:photoCam width="270" height="190" format="png" widgetVar="pc" listener="#{compteMB.onCapture}" />
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('widget_cameraphoto').hide()" />
+                    <p:commandButton process="dialog_cameraphoto" onclick="PF('pc').capture()" icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Capture}" partialSubmit="true" update=":form:pan_photocopper"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog responsive="true" id="dialog_photocopper" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="widget_photocopper" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{lv.Cadrage}" />
+                </f:facet>
+
+                <p:imageCropper id="pan_photocopper" minSize="50,50" value="#{compteMB.croppedImage}" image="/#{compteMB.imageTempRelatif}" />
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" actionListener="#{compteMB.deleteTempImage()}" immediate="true" oncomplete="PF('widget_photocopper').hide()" />
+                    <p:commandButton process="dialog_photocopper" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Valider}" partialSubmit="true" actionListener="#{compteMB.crop}" update="form:tabView_user:tr_photo,form:tabView_user:appercu,form:tabView_user:etat_civil,pan_photocopper"/>
+                </h:panelGrid>
+                <p:messages />
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Editer compte************************************************************************************************************************************************************************************************************** -->
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form_info">
+            <p:poll autoStart="#{compteMB.routine.vanish}" immediate="true" interval="3" listener="#{compteMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+            <p:dialog responsive="true" onShow="#{compteMB.routine.vanish ? 'PF(\'widget_compte\').hide()' : ''}" visible="#{compteMB.routine.showInfo}" modal="#{true or !compteMB.routine.vanish}" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{compteMB.routine.titleMessage} : #{compteMB.routine.contexteMessage}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="#{compteMB.routine.iconMessage}" />
+                    <h:outputText style="#{(compteMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (compteMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{compteMB.routine.message}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="text-align: center; margin: auto;">
+                    <p:commandButton icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{compteMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+    </ui:define>
+</ui:composition>

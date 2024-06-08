@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.3"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd">
+
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>fr</supported-locale>
+        </locale-config>
+    
+        <resource-bundle>
+            <base-name>language</base-name>
+            <var>lv</var>
+        </resource-bundle>
+    </application>
+    
+    <managed-bean>
+        <description>Principal user's session</description>
+        <managed-bean-name>sessionMB</managed-bean-name>
+        <managed-bean-class>mb.SessionMB</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Calculator</description>
+        <managed-bean-name>calculatriceMB</managed-bean-name>
+        <managed-bean-class>mb.CalculatriceMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Accounts management backing bean</description>
+        <managed-bean-name>compteMB</managed-bean-name>
+        <managed-bean-class>mb.CompteMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Agencies management backing bean</description>
+        <managed-bean-name>agenceMB</managed-bean-name>
+        <managed-bean-class>mb.AgenceMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>User groups management backing bean</description>
+        <managed-bean-name>groupeUtilisateurMB</managed-bean-name>
+        <managed-bean-class>mb.GroupeUtilisateurMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Acounts privileges management backing bean</description>
+        <managed-bean-name>droitAccesCompteMB</managed-bean-name>
+        <managed-bean-class>mb.DroitAccesCompteMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Groups privileges management backing bean</description>
+        <managed-bean-name>droitAccesGroupeMB</managed-bean-name>
+        <managed-bean-class>mb.DroitAccesGroupeMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Operations management backing bean</description>
+        <managed-bean-name>operationsMB</managed-bean-name>
+        <managed-bean-class>mb.OperationsMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Multimedia</description>
+        <managed-bean-name>multimediaMB</managed-bean-name>
+        <managed-bean-class>mb.MultimediaMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Items</description>
+        <managed-bean-name>articleMB</managed-bean-name>
+        <managed-bean-class>mb.ArticleMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Prices report</description>
+        <managed-bean-name>analysePrixMB</managed-bean-name>
+        <managed-bean-class>mb.AnalysePrixMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Competitors</description>
+        <managed-bean-name>concurrentMB</managed-bean-name>
+        <managed-bean-class>mb.ConcurrentMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>For long lasting processes</description>
+        <managed-bean-name>systemMB</managed-bean-name>
+        <managed-bean-class>mb.SystemMB</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>Notification</description>
+        <managed-bean-name>notificationsMB</managed-bean-name>
+        <managed-bean-class>mb.NotificationsMB</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+</faces-config>

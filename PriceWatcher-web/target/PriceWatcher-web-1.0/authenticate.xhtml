@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{sessionMB.locale}" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta name="google" content="notranslate" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta NAME="description" CONTENT="authentification"/>
+        <meta NAME="keywords" CONTENT="VéO, mot de passe, login, password, connexion, log, sécurité"/>
+        <!--<link rel="shortcut icon" href="/favicon_veo.ico" type="image/png"/>-->
+        <link rel="icon" href="/favicon_veo.ico" type="image/png" />
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />
+        <link href="./resources/css/cssLayoutIndex.css" rel="stylesheet" type="text/css" />
+        <script language="JavaScript" type="text/javascript" src="./resources/javaScript/js.js" /><script language="JavaScript" type="text/javascript" src="./resources/javaScript/webcam.js" />
+        <title>#{lv.Authentification}</title>
+    </h:head>
+
+    <h:body>
+        <f:view locale="#{sessionMB.locale}">
+            <h:form id="menu_form">
+
+                <p:panel style="border-radius: 0px; text-align: center; margin: auto; margin-top: 15%; width: 280px;">
+                    <f:facet name="header">
+                        <h:outputText style="font-size: 12pt; color: darkblue; font-weight: bold;" value="#{lv.Authentification}" />
+                    </f:facet>
+
+                    <h:panelGrid id="form_con" style="text-align: justify; width: 100%;">
+                        <p:outputLabel style="" value="#{lv.Login}:" for="login" />
+                        <p:inputText style="width: calc(99%);" id="login" value="#{sessionMB.currentUser.login}" title="#{lv.Login}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                        <p:outputLabel style="" value="#{lv.Mdp}:" for="mdp" />
+                        <p:inputText autocomplete="false" style="width: calc(99%);" type="password" id="mdp" value="#{sessionMB.currentUser.mdp}" title="#{lv.Mdp}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                    </h:panelGrid>
+
+                    <f:facet name="footer">
+                        <h:panelGrid style="text-align: center; width: 100%; margin: auto;" columns="2">
+                            <p:commandButton icon="cancelIcon" style="" value="#{lv.Annuler}" action="#{sessionMB.index()}" immediate="true"/>
+                            <p:commandButton id="ok" icon="okIcon" style="" value="#{lv.Connexion}" action="#{sessionMB.authenticationGeneral()}" update="form_con,form_info:id_info" />
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>
+
+                <p:defaultCommand target="ok" />
+                <p:poll autoStart="false" immediate="true" interval="3" listener="#{sessionMB.routine.stopInfo()}" oncomplete="PF('pooler').stop()" widgetVar="pooler" />
+            </h:form>
+
+            <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+            <h:form id="form_info">
+                <p:dialog responsive="true" width="280" onHide="PF('pooler').start()" visible="#{sessionMB.routine.showInfo}" modal="true" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                    <f:facet name="header">
+                        <h:outputText style="" value="#{sessionMB.routine.titleMessage} : #{sessionMB.routine.contexteMessage}" />
+                    </f:facet>
+
+                    <h:panelGrid style="margin: auto; text-align: center;">
+                        <p:graphicImage alt="Oups!" url="#{sessionMB.routine.iconMessage}" />
+                        <h:outputText style="font-size: 11pt; #{(sessionMB.routine.vanish ? 'color: green;' : (sessionMB.routine.titleMessage.contains('Err') ? 'color: red;' : 'color: purple;'))}" value="#{sessionMB.routine.message}" />
+                        <h:outputText rendered="#{sessionMB.routine.special}" style="color: cornflowerblue;" value="#{lv.Mot_remercie}" />
+                    </h:panelGrid>
+
+                    <f:facet name="footer">
+                        <h:panelGrid style="text-align: center; margin: auto;">
+                            <p:commandButton icon="seenIcon" style="float: left;" value="Ok" immediate="true" oncomplete="PF('info').hide()" />
+                        </h:panelGrid>
+                    </f:facet>
+                </p:dialog>
+                <p:ajaxStatus onstart="busyness('begin')" oncomplete="busyness('complete')"/>
+            </h:form>
+            <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        </f:view>
+    </h:body>
+</html>
+

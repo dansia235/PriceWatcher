@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./moduleSecurite.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form id="dForm">
+
+            <h:panelGrid style="text-align: center; margin: auto; width: 100%;">
+                <h:outputText style="font-size: 10pt; font-weight: bold; color: cornflowerblue;" value="#{lv.Atribuer_droit_compte}" />
+            </h:panelGrid>
+
+            <p:separator />
+
+            <h:panelGrid style="margin: auto;">
+                <h:panelGrid id="compte" columns="3">
+                    <p:outputLabel value="#{lv.Utilisateur}:" for="tr_compte" />
+                    <p:selectOneMenu autoWidth="false" filter="true" filterMatchMode="contains" disabled="#{!droitAccesCompteMB.egc}" style="#{droitAccesCompteMB.style} width: 148px;" id="tr_compte" value="#{droitAccesCompteMB.selectedCompte}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{droitAccesCompteMB.listCompte}" var="item" itemLabel="#{item.nomPrenom} (#{item.idagence.raisonsociale})" itemValue="#{item.idCompte}"/>
+                        <p:ajax update="compte,tree" event="change" listener="#{droitAccesCompteMB.selectAccount()}" partialSubmit="true" />
+                    </p:selectOneMenu>
+                    <h:graphicImage height="25" width="25" url="#{droitAccesCompteMB.user.photoRelatif != null ? droitAccesCompteMB.user.photoRelatif : 'resources/tool_images/question.png'}" />
+                    <!--<p:message for="tr_compte"/>-->
+                </h:panelGrid>
+
+                <p:tree dynamic="true" id="tree" animate="true" value="#{droitAccesCompteMB.menus}" propagateSelectionUp="false" var="menu" selectionMode="checkbox" selection="#{droitAccesCompteMB.selectedMenus}" highlight="true" style="height: #{600 > sessionMB.routine.screenH ? 500 : (sessionMB.routine.screenH - 307)}px; width: 290px; overflow: auto; font-size: 11pt;">
+                    <p:ajax partialSubmit="true" global="false" update="dForm:tree" event="select" listener="#{droitAccesCompteMB.onNodeSelect}" />
+                    <p:ajax partialSubmit="true" global="false" update="dForm:tree" event="unselect" listener="#{droitAccesCompteMB.onNodeUnSelect}" />
+                    <p:treeNode icon="module" type="Module">
+                        <h:outputText value="#{sessionMB.locale == 'en' ? menu.label : menu.libelle}"/>
+                    </p:treeNode>
+                    <p:treeNode icon="menu" type="Menu">
+                        <h:outputText value="#{sessionMB.locale == 'en' ? menu.label : menu.libelle}"/>
+                    </p:treeNode>
+                    <p:treeNode icon="sous_menu" type="Sous Menu">
+                        <h:outputText value="#{sessionMB.locale == 'en' ? menu.label : menu.libelle}"/>
+                    </p:treeNode>
+                    <p:treeNode icon="fenetre" type="Fenêtre">
+                        <h:outputText value="#{sessionMB.locale == 'en' ? menu.label : menu.libelle}"/>
+                    </p:treeNode>
+                    <p:treeNode icon="bouton" type="Bouton">
+                        <h:outputText value="#{sessionMB.locale == 'en' ? menu.label : menu.libelle}"/>
+                    </p:treeNode>
+                </p:tree>
+            </h:panelGrid>
+
+            <p:separator />
+
+            <h:panelGrid id="btn_cmd" style="margin: auto; width: 100%; text-align: center;" columns="2">
+                <p:commandButton rendered="#{droitAccesCompteMB.esc}" icon="okIcon" style="font-size: 10pt; font-weight: bold;" value="#{lv.Enregistrer}" actionListener="#{droitAccesCompteMB.persist()}" partialSubmit="true" update="compte,form_info"/>
+                <!--<p:commandButton immediate="true" icon="cancelIcon" style="font-size: 10pt; font-weight: bold;" value="#{lv.Fermer}" action="#{droitAccesCompteMB.closePage()}" />-->
+            </h:panelGrid>
+        </h:form>
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form_info">
+            <p:poll autoStart="#{droitAccesCompteMB.routine.vanish}" immediate="true" interval="3" listener="#{droitAccesCompteMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+            <p:dialog responsive="true" onShow="#{droitAccesCompteMB.routine.vanish ? 'PF(\'widget_droitAccesCompte\').hide()' : ''}" visible="#{droitAccesCompteMB.routine.showInfo}" modal="#{true or !droitAccesCompteMB.routine.vanish}" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{droitAccesCompteMB.routine.titleMessage} : #{droitAccesCompteMB.routine.contexteMessage}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="#{droitAccesCompteMB.routine.iconMessage}" />
+                    <h:outputText style="#{(droitAccesCompteMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (droitAccesCompteMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{droitAccesCompteMB.routine.message}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="text-align: center; margin: auto;">
+                    <p:commandButton icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{droitAccesCompteMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+    </ui:define>
+</ui:composition>

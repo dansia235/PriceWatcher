@@ -1,0 +1,302 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./moduleSecurite.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="content">
+        <style id="tableStyle">
+            .ui-columntoggler{
+                width: 150px;
+                height: 160px !important;
+            }
+        </style>
+        <h:form id="dForm">
+
+            <div jsf:id="btn_rch" style="padding-bottom: 2px; text-align: center; margin: auto;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="" value="#{lv.Filtre}" />
+                            <p:selectOneMenu style="width: 145px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{operationsMB.selectedCritere.attribut}">
+                                <f:selectItems value="#{operationsMB.listCritereFiltre}" var="critere" itemLabel="#{critere.libelle}" itemValue="#{critere.attribut}" />
+                                <p:ajax event="change" listener="#{operationsMB.selectCritere()}" update="btn_rch" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-3 ui-md-3 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{operationsMB.selectedCritere.type.equals('String') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:inputText value="#{operationsMB.selectedCritere.valString}" size="21" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{operationsMB.selectedCritere.type.equals('Boolean') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Valeur}" />
+                            <p:selectBooleanCheckbox value="#{operationsMB.selectedCritere.valBool}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{(operationsMB.selectedCritere.type.equals('Select') or operationsMB.selectedCritere.type.equals('Select2') or operationsMB.selectedCritere.type.equals('Select3')) ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Agence}" />
+                            <p:selectOneMenu style="width: 145px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{operationsMB.selectedCritere.valSelect}">
+                                <f:selectItems value="#{operationsMB.listAgence}" var="item" itemLabel="#{item.raisonsociale}" itemValue="#{item.idagence}" />
+                                <p:ajax event="change" listener="#{operationsMB.fitreGlobal()}" partialSubmit="true" update="btn_rch" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-12 ui-g-nopad">
+                    <div style="display: #{operationsMB.selectedCritere.type.equals('Select') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-g-nopad">
+                        <h:panelGrid style="margin: auto;">
+                            <p:outputLabel style="color: cornflowerblue;" value="#{lv.Compte}" />
+                            <p:selectOneMenu disabled="#{!operationsMB.selectedCritere.type.equals('Select')}" style="width: 145px;" autoWidth="false" filter="true" filterMatchMode="contains" value="#{operationsMB.selectedCritere.valSelect2}">
+                                <f:selectItem itemLabel="#{lv.Tous}" itemValue="" />
+                                <f:selectItems value="#{operationsMB.listCompte}" var="item" itemLabel="#{item.nomPrenom}" itemValue="#{item.idCompte}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                    <div style="display: #{operationsMB.selectedCritere.type.equals('Numeric') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Min}" />
+                                <p:spinner value="#{operationsMB.selectedCritere.valNum1}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Max}" />
+                                <p:spinner value="#{operationsMB.selectedCritere.valNum2}" size="5" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <div style="display: #{operationsMB.selectedCritere.type.equals('Date') ? 'block' : 'none'}; text-align: center; margin: auto;" class="ui-g-12 ui-md-12 ui-sm-12 ui-g-nopad">
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Debut}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{operationsMB.selectedCritere.valDate1}" size="14" showOn="button" title="#{lv.Debut}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                            <h:panelGrid style="margin: auto;">
+                                <p:outputLabel style="color: cornflowerblue;" value="#{lv.Fin}" />
+                                <p:calendar locale="#{sessionMB.locale}" navigator="true" showHour="true" showMinute="true" pattern="dd/MM/yyyy HH:mm" showTodayButton="true" value="#{operationsMB.selectedCritere.valDate2}" size="14" showOn="button" title="#{lv.Fin}" showWeek="true" yearRange="c-100:c+10" requiredMessage="#{lv.Valeur_obligatoire}" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: auto;" class="ui-g-2 ui-md-2 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <p:commandButton disabled="#{!operationsMB.routine.raf}" icon="raf" style="font-size: 9pt; font-weight: bold; margin-top: 20px;" actionListener="#{operationsMB.rechercheOperations()}" update="btn_rch,grille,btn_cmd,@form,stat1,stat2,stat3,stat4,grille" value="#{lv.Rechercher_abrev}" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <p:commandButton icon="#{operationsMB.mode.equals('Grille') ? 'stat' : 'con'}" style="font-size: 9pt; font-weight: bold; margin-top: 20px;" actionListener="#{operationsMB.switchMode()}" update="btn_rch,grille,btn_cmd,@form,stat1,stat2,stat3,stat4,grille" value="#{operationsMB.mode.equals('Grille') ? lv.Graphique_abrev : lv.Table}" />
+                    </div>
+                </div>
+            </div>
+
+            <p:dataTable disabledTextSelection="false" reflow="true" rendered="#{operationsMB.mode.equals('Grille')}" id="grille" scrollHeight="#{(600 > sessionMB.routine.screenH) ? '' : (sessionMB.routine.screenH - 377)}" rows="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 377)/25)}" lazy="true" rowsPerPageTemplate="#{(600 > sessionMB.routine.screenH) ? 3 : ((sessionMB.routine.screenH - 377)/25).intValue()},100,1000,2000" scrollable="true" rowStyleClass="rowStyle" sortMode="multiple" selectionMode="multiple" selection="#{operationsMB.selectedListOperations}" rowKey="#{item.idOperations}" emptyMessage="#{lv.Grille_vide}" paginator="true" paginatorPosition="bottom" var="item" value="#{operationsMB.lazylistOperationsModel}">
+                <f:facet name="header">
+                    <h:outputText style=" color: #{!operationsMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Liste} #{lv.Des} #{lv.Operation}s#{!operationsMB.selectedCritere.etat.equals('Actif') ? ' (' += lv.Corbeille += ')' : ''}" />
+                    <!--<p:commandButton id="toggler" type="button" value="#{lv.Colonne}" style="float: right; font-size: 7pt; color: blue;" icon="ui-icon-calculator" />
+                    <p:columnToggler datasource="grille" trigger="toggler" />-->
+                </f:facet>
+
+                <p:ajax event="rowSelect" listener="#{operationsMB.rowClick()}" update=":dForm:btn_cmd" />
+                <p:ajax event="rowUnselect" listener="#{operationsMB.rowClick()}" update=":dForm:btn_cmd" />
+
+                <p:column width="200" rendered="#{operationsMB.categorie == 1}" visible="#{operationsMB.categorie == 1}" sortBy="#{item.idCompte.nomPrenom}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Utilisateur}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.idCompte.nomPrenom}"/>
+                </p:column>
+                <p:column width="200" rendered="#{operationsMB.categorie == 2}" visible="#{operationsMB.categorie == 2}" sortBy="#{item.idclient.nomcomplet}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Client}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.idclient.nomcomplet}"/>
+                </p:column>
+                <p:column width="150" sortBy="#{sessionMB.locale.equals('fr') ? item.libelle : item.label}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Operation}"/>
+                    </f:facet>
+                    <h:outputText value="#{sessionMB.locale.equals('fr') ? item.libelle : item.label}"/>
+                </p:column>
+                <p:column sortBy="#{item.cible}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Cible}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.cible}"/>
+                </p:column>
+                <p:column width="130" sortBy="#{item.adresseIp}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Adresse} (IP)"/>
+                    </f:facet>
+                    <h:outputText value="#{item.adresseIp.equals('0:0:0:0:0:0:0:1') or item.adresseIp.equals('127.0.0.1') ? 'localhost' : item.adresseIp}"/>
+                </p:column>
+                <p:column width="130" style="text-align: center;" sortBy="#{item.dateOpration}" exportable="true" >
+                    <f:facet name="header">
+                        <h:outputText value="#{lv.Date}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateOpration}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+
+                <f:facet name="footer">
+                    <h:outputText style=" color: #{!operationsMB.selectedCritere.etat.equals('Actif') ? '#e98a7e' : 'white'}; text-shadow: white;" value="#{lv.Total} =  #{operationsMB.listOperations.size()}" />
+                </f:facet>
+            </p:dataTable>
+
+            <div style="display: #{operationsMB.mode.equals('Chart') ? 'block' : 'none'}; padding: 0px 5px 0px 5px; margin: 5px; text-align: center;" class="ui-fluid ui-g">
+                <div style="height: #{600 > sessionMB.routine.screenH ? 190 : ((sessionMB.routine.screenH - 233) / 2)}px; border-style: solid; border-width: 1px; border-" class="ui-g-6 ui-md-6 ui-sm-12">
+                    <p:chart rendered="#{operationsMB.routine.imp and operationsMB.pcmOperation.data.size() > 0}" style="height: #{600 > sessionMB.routine.screenH ? 180 : ((sessionMB.routine.screenH - 243) / 2)}px; font-size: 7pt;" id="stat1" responsive="true" type="pie" model="#{operationsMB.pcmOperation}" />
+                </div>
+                <div style="height: #{600 > sessionMB.routine.screenH ? 190 : ((sessionMB.routine.screenH - 233) / 2)}px; border-style: solid; border-width: 1px; border-" class="ui-g-6 ui-md-6 ui-sm-12">
+                    <p:chart rendered="#{operationsMB.routine.imp and operationsMB.bcmOperation.series.size() > 0}" style="height: #{600 > sessionMB.routine.screenH ? 180 : ((sessionMB.routine.screenH - 243) / 2)}px; font-size: 7pt;" id="stat2" responsive="true" type="bar" model="#{operationsMB.bcmOperation}" />
+                </div>
+                <div style="height: #{600 > sessionMB.routine.screenH ? 190 : ((sessionMB.routine.screenH - 233) / 2)}px; border-style: solid; border-width: 1px; border-" class="ui-g-6 ui-md-6 ui-sm-12">
+                    <p:chart rendered="#{operationsMB.routine.imp and operationsMB.pcmOperationFill.data.size() > 0}" style="height: #{600 > sessionMB.routine.screenH ? 180 : ((sessionMB.routine.screenH - 243) / 2)}px; font-size: 7pt;" id="stat3" responsive="true" type="pie" model="#{operationsMB.pcmOperationFill}" />
+                </div>
+                <div style="height: #{600 > sessionMB.routine.screenH ? 190 : ((sessionMB.routine.screenH - 233) / 2)}px; border-style: solid; border-width: 1px; border-" class="ui-g-6 ui-md-6 ui-sm-12">
+                    <p:chart rendered="#{operationsMB.routine.imp and operationsMB.lcmOperation.series.size() > 0}" style="height: #{600 > sessionMB.routine.screenH ? 180 : ((sessionMB.routine.screenH - 243) / 2)}px; font-size: 7pt;" id="stat4" responsive="true" type="line" model="#{operationsMB.lcmOperation}" />
+                </div>
+            </div>
+
+            <div jsf:id="btn_cmd" style="padding-bottom: 2px; text-align: center; margin: auto; padding-top: 4px;" class="ui-g ui-g-nopad">
+                <div style="text-align: center; margin: auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:menuButton style="font-size: 8pt;" rendered="#{sessionMB.muchrd}" disabled="#{!operationsMB.selectedCritere.etat.equals('Supprime')}" value="#{lv.Detruire}">
+                            <p:menuitem id="det" immediate="true" disabled="#{!operationsMB.routine.det}" actionListener="#{operationsMB.destroy}" style="font-size: 9pt; font-weight: bold;" value=" #{lv.Selection}" iconPos="left" icon="det" oncomplete="PF('conf_sup').show()" />
+                            <p:menuitem id="det_all" immediate="true" actionListener="#{operationsMB.destroy}" style="font-size: 9pt; font-weight: bold;" value=" #{lv.Toutes}" iconPos="left" icon="det" oncomplete="PF('conf_sup').show()" />
+                        </p:menuButton>
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:menuButton style="font-size: 8pt;" rendered="#{sessionMB.muchrd}" disabled="#{!operationsMB.selectedCritere.etat.equals('Supprime')}" value="#{lv.Restaurer}">
+                            <p:menuitem id="res" immediate="true" disabled="#{!operationsMB.routine.res}" actionListener="#{operationsMB.restaure}" style="font-size: 9pt; font-weight: bold;" value=" #{lv.Selection}" iconPos="left" icon="res" oncomplete="PF('conf_sup').show()" />
+                            <p:menuitem id="res_all" immediate="true" actionListener="#{operationsMB.restaure}" style="font-size: 9pt; font-weight: bold;" value=" #{lv.Toutes}" iconPos="left" icon="res" oncomplete="PF('conf_sup').show()" />
+                        </p:menuButton>
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton widgetVar="cor" icon="cor" disabled="#{!operationsMB.routine.cor}" style="font-size: 9pt; font-weight: bold;" value="#{operationsMB.selectedCritere.etat == 'Actif' ? lv.Corbeille : lv.Liste}" actionListener="#{operationsMB.btnClick}" update=":form,@this,grille,btn_cmd" />
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 3px auto 3px auto;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" rendered="#{sessionMB.muchrd}" disabled="#{!operationsMB.routine.con}" widgetVar="con" icon="con" style="font-size: 9pt; font-weight: bold;" value="#{lv.Consulter}" actionListener="#{operationsMB.btnClick}" update=":form" oncomplete="PF('widget_operations').show()" />
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:menuButton style="font-size: 8pt;" rendered="#{sessionMB.muchrd}" disabled="#{operationsMB.routine.cor ? true : !(operationsMB.listOperations.size() > 0)}" value="#{lv.Supprimer}">
+                            <p:menuitem id="sup" immediate="true" disabled="#{!operationsMB.routine.sup}" actionListener="#{operationsMB.delete}" style="font-size: 9pt; font-weight: bold;" value=" #{lv.Selection}" iconPos="left" icon="sup" oncomplete="PF('conf_sup').show()" />
+                            <p:menuitem id="sup_all" immediate="true" actionListener="#{operationsMB.delete}" style="font-size: 9pt; font-weight: bold;" value=" #{lv.Toutes}" iconPos="left" icon="sup" oncomplete="PF('conf_sup').show()" />
+                        </p:menuButton>
+                    </div>
+                    <div style="text-align: center; margin: auto;" class="ui-g-4 ui-md-4 ui-sm-4 ui-g-nopad">
+                        <p:commandButton immediate="true" ajax="false" action="#{operationsMB.imprimer()}" rendered="#{sessionMB.muchrd}" disabled="#{!operationsMB.routine.imp}" style="font-size: 9pt; font-weight: bold;" widgetVar="imp" icon="imp" value="#{lv.Imprimer}" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+            <p:dialog responsive="true" closeOnEscape="true" modal="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" widgetVar="conf_sup" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{lv.Confirmation}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="resources/tool_images/question.png" />
+                    <h:outputText value="#{lv.Question_onfirmer}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="#{lv.Annuler}" immediate="true" oncomplete="PF('conf_sup').hide()" />
+                    <p:commandButton icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="Ok" actionListener="#{operationsMB.persist()}" update="grille,btn_cmd,form_info" onsuccess="PF('conf_sup').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+            <!-- ****************************************Suppression************************************************************************************************************************************************************************************************************** -->
+        </h:form>
+
+        <!-- ****************************************Editer operations************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form">
+            <p:dialog responsive="true" id="dialog_operations" modal="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" height="#{600 > sessionMB.routine.screenH ? 350 : 425}" widgetVar="widget_operations" closable="false" resizable="false" showHeader="true" showEffect="slide" hideEffect="slide">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 11pt;" value="#{(operationsMB.operation.equals('add') ? lv.Ajouter : (operationsMB.operation.equals('cop') ? lv.Copier : (operationsMB.operation.equals('mod') ? lv.Modifier : lv.Consulter)))} #{lv.Une} #{lv.Operation}" />
+                </f:facet>
+
+                <div jsf:id="pan_operations" style="text-align: center; display: table;" class="ui-g ui-g-nopad">
+                    <div style="text-align: center; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <h:panelGrid style="text-align: justify;">
+                            <p:outputLabel style="" value="#{lv.Libelle} (#{lv.Francais}):" for="tr_libelle" />
+                            <p:inputText disabled="#{!operationsMB.egc}" style="#{operationsMB.style}" id="tr_libelle" value="#{operationsMB.selectedOperations.libelle}" title="#{lv.Libelle}" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Libelle} (#{lv.Anglais}):" for="tr_libelle_en" />
+                            <p:inputText disabled="#{!operationsMB.egc}" style="#{operationsMB.style}" id="tr_libelle_en" value="#{operationsMB.selectedOperations.label}" title="#{lv.Libelle}" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Cible}:" for="tr_cible" />
+                            <p:inputTextarea autoResize="false" rows="1" disabled="#{!operationsMB.egc}" style="#{operationsMB.style}" id="tr_cible" value="#{operationsMB.selectedOperations.cible}" title="#{lv.Cible}" cols="23" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Adresse} (IP):" for="tr_adresse" />
+                            <p:inputText disabled="#{!operationsMB.egc}" style="#{operationsMB.style}" id="tr_adresse" value="#{operationsMB.selectedOperations.adresseIp.equals('0:0:0:0:0:0:0:1') or operationsMB.selectedOperations.adresseIp.equals('127.0.0.1') ? 'localhost' : operationsMB.selectedOperations.adresseIp}" title="#{lv.Adresse} (IP)" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+
+                            <p:outputLabel style="" value="#{lv.Poste_client}:" for="tr_posteClient" />
+                            <p:inputText disabled="#{!operationsMB.egc}" style="#{operationsMB.style}" id="tr_posteClient" value="#{operationsMB.selectedOperations.adressenom.equals('0:0:0:0:0:0:0:1') or operationsMB.selectedOperations.adressenom.equals('127.0.0.1') ? 'localhost' : operationsMB.selectedOperations.adressenom}" title="#{lv.Poste_client}" size="25" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="text-align: center; width: 240px;" class="ui-g-6 ui-md-6 ui-sm-12 ui-g-nopad">
+                        <h:panelGrid style="text-align: justify;">
+                            <p:outputLabel style="" value="#{lv.Date}:" for="tr_date" />
+                            <p:calendar showMinute="true" showSecond="true" showTodayButton="true" locale="#{sessionMB.locale}" showWeek="true" showHour="true" size="21" disabled="#{!operationsMB.egc}" style="#{operationsMB.style}" id="tr_date" value="#{operationsMB.selectedOperations.dateOpration}" title="#{lv.Date}" showOn="button" navigator="true" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <f:convertDateTime pattern="EEE dd/MMM/yyyy HH:mm:ss" />
+                            </p:calendar>
+
+                            <p:outputLabel rendered="#{operationsMB.categorie == 1}" style="" value="#{lv.Utilisateur}:" for="tr_compte" />
+                            <p:selectOneMenu rendered="#{operationsMB.categorie == 1}" autoWidth="false" filter="true" filterMatchMode="contains" disabled="#{!operationsMB.egc}" style="#{operationsMB.style} width: 175px;" id="tr_compte" value="#{operationsMB.selectedCompte}" required="true" requiredMessage="#{lv.Valeur_obligatoire}" converterMessage="#{lv.Taille_type_invalide}" validatorMessage="#{lv.Format_invalide}" >
+                                <f:selectItem itemLabel="" itemValue=""/>
+                                <f:selectItems value="#{operationsMB.listCompte}" var="item" itemLabel="#{item.nomPrenom}" itemValue="#{item.idCompte}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </div>
+                </div>
+
+                <p:separator/>
+
+                <h:panelGrid style="width: 100%; text-align: center;" columns="2">
+                    <p:commandButton icon="cancelIcon" style="#{operationsMB.operation.equals('con') ? 'font-size: 10pt; font-weight: bold;' : 'font-size: 10pt; font-weight: bold; float: left;'}" value="#{operationsMB.operation.equals('con') ? lv.Fermer : lv.Annuler}" immediate="true" oncomplete="PF('widget_operations').hide()" />
+                    <p:commandButton process="form,:dForm" rendered="#{operationsMB.esc}" icon="okIcon" style="font-size: 10pt; font-weight: bold; float: right;" value="#{lv.Enregistrer}" actionListener="#{operationsMB.persist()}" partialSubmit="true" update=":dForm:grille,:dForm:btn_cmd,pan_operations,form_info"/>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Editer operations************************************************************************************************************************************************************************************************************** -->
+
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+        <h:form id="form_info">
+            <p:poll autoStart="#{operationsMB.routine.vanish}" immediate="true" interval="3" listener="#{operationsMB.routine.stopInfo()}" update="form_info" widgetVar="pooler" />
+            <p:dialog responsive="true" onShow="#{operationsMB.routine.vanish ? 'PF(\'widget_operations\').hide()' : ''}" visible="#{operationsMB.routine.showInfo}" modal="#{true or !operationsMB.routine.vanish}" showHeader="true" resizable="true" closable="false" fitViewport="true" closeOnEscape="true" dynamic="true" style="font-size: 10pt; font-weight: bold;" id="id_info" widgetVar="info" showEffect="fade" hideEffect="fade">
+                <f:facet name="header">
+                    <h:outputText style="font-size: 10pt;" value="#{operationsMB.routine.titleMessage} : #{operationsMB.routine.contexteMessage}" />
+                </f:facet>
+
+                <h:panelGrid style="margin: auto; text-align: center;">
+                    <p:graphicImage alt="Oups!" url="#{operationsMB.routine.iconMessage}" />
+                    <h:outputText style="#{(operationsMB.routine.vanish ? 'font-size: 10pt; font-weight: bold; color: green;' : (operationsMB.routine.titleMessage.contains('Err') ? 'font-size: 10pt; font-weight: bold; color: red;' : 'font-size: 10pt; font-weight: bold; color: purple;'))}" value="#{operationsMB.routine.message}" />
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <h:panelGrid style="text-align: center; margin: auto;">
+                    <p:commandButton icon="seenIcon" style="font-size: 10pt; font-weight: bold; float: left;" value="Ok" immediate="true" actionListener="#{operationsMB.routine.stopInfo()}" update="form_info" oncomplete="PF('info').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- ****************************************Information************************************************************************************************************************************************************************************************************** -->
+    </ui:define>
+</ui:composition>
